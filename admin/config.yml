@@ -1,0 +1,58 @@
+# WRITEopia Blog 後台設定
+# 上架前請把 repo 改成你的 GitHub 帳號/儲存庫名稱，例如：jessie/writeopia
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO
+  branch: main
+
+media_folder: assets/blog
+public_folder: assets/blog
+
+collections:
+  - name: blog
+    label: Writing Lab 寫作挑戰
+    files:
+      - name: posts
+        label: 所有文章
+        file: blog/posts.json
+        format: json
+        fields:
+          - name: posts
+            label: 題目
+            label_singular: 題目
+            widget: list
+            add_to_top: true
+            summary: "{{fields.date}} · {{fields.title}}"
+            fields:
+              - { name: title, label: 標題, widget: string, hint: "例如【IELTS Task 2｜Causes & Solutions】糧食短缺的原因與解決方法" }
+              - { name: slug, label: 網址代稱, widget: string, hint: "只用英文小寫、數字與連字號，例如 ielts-t2-food-shortages，不能和其他題目重複" }
+              - { name: date, label: 發佈日期, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - { name: draft, label: 草稿（勾選後不會公開）, widget: boolean, default: false, required: false }
+              - { name: excerpt, label: 摘要, widget: text, hint: "顯示在列表上，1–2 句即可" }
+              - { name: type, label: 題型 TYPE, widget: select, options: [{ label: "IELTS Task 1", value: "ielts-t1" }, { label: "IELTS Task 2", value: "ielts-t2" }, { label: "GEPT 全民英檢", value: "gept" }, { label: "時事閱讀", value: "news" }, { label: "故事閱讀", value: "story" }, { label: "自由寫作", value: "free" }] }
+              - { name: theme, label: 主題 THEME（紅字）, widget: string, required: false, hint: "例如 Food & Environment、Education & Libraries" }
+              - { name: words, label: 字數 LENGTH, widget: string, required: false, hint: "例如 250+ words" }
+              - { name: minutes, label: 建議時間 TIME（分鐘）, widget: number, required: false }
+              - { name: level, label: 程度（選填，沒填主題時才顯示）, widget: string, required: false }
+              - { name: deadline, label: 截止日期（選填）, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "留空＝不顯示截止日" }
+              - { name: body, label: 前言／說明, widget: markdown, required: false, hint: "例如：文章類型：**Causes & Solutions**" }
+              - { name: passage, label: 閱讀文章 READ FIRST（時事／故事題）, widget: markdown, required: false }
+              - { name: prompt, label: 寫作題目 YOUR TASK, widget: markdown, hint: "題目原文用 > 開頭會變成引用格式；可接著寫「題目要求」清單" }
+              - name: images
+                label: 題目圖表（Task 1 圖表等）
+                label_singular: 圖片
+                widget: list
+                required: false
+                fields:
+                  - { name: image, label: 圖片, widget: image }
+                  - { name: caption, label: 圖說（選填）, widget: string, required: false }
+              - { name: tips, label: 實用句型與寫作提示 TOOLKIT（選填，預設收起）, widget: markdown, required: false }
+              - { name: sample, label: 參考範文 MODEL ANSWER, widget: markdown, required: false, hint: "重點字可加顏色：[r]紅色[/r]、[p]紫色[/p]、[g]綠色[/g]；粗體用 **文字**" }
+              - { name: sampleWords, label: 範文字數, widget: string, required: false, hint: "例如 258 words，會顯示在範文最後" }
+              - { name: legendText, label: 顏色說明（選填）, widget: string, required: false, hint: "有用顏色時自動顯示；可自訂，例如：紅＝衝突與人口、紫＝氣候、綠＝農業" }
+              - { name: band, label: 範文分數, widget: string, required: false, hint: "留空＝自動顯示 Band 8+" }
+              - { name: structure, label: 範文解析｜文章結構, widget: markdown, required: false, hint: "可用表格：| 段落 | 功能 | 內容重點 |" }
+              - { name: language, label: 範文解析｜實用句型, widget: markdown, required: false }
+              - { name: descriptors, label: 範文解析｜對應評分標準, widget: markdown, required: false, hint: "Task Response／Coherence & Cohesion／Lexical Resource／Grammatical Range & Accuracy" }
+              - { name: cover, label: 列表縮圖（選填）, widget: image, required: false }
+              - { name: video, label: YouTube 影片連結（選填）, widget: string, required: false }
