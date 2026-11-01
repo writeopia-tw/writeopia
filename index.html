@@ -38,6 +38,7 @@ button{font-family:inherit}
 button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3px}
 @keyframes woTickIn{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}
 @keyframes woTickOut{from{transform:none;opacity:1}to{transform:translateY(-100%);opacity:0}}
+@keyframes woSlideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @keyframes woFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes woStamp{0%{opacity:0;transform:rotate(-14deg) scale(1.4)}100%{opacity:1;transform:rotate(-8deg) scale(1)}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -87,7 +88,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           <span style="font-family:'Special Elite',monospace;font-size:11px;color:#90AFA0;letter-spacing:.12em">English &amp; IELTS</span>
         </span>
       </button>
-      <nav style="display:flex;align-items:center;gap:clamp(14px,2.6vw,30px);flex-wrap:wrap">
+      <nav style="display:flex;align-items:center;gap:clamp(14px,2.6vw,30px);flex-wrap:wrap;margin-left:auto">
         <div onMouseEnter="{{ homeMenuOpen }}" onMouseLeave="{{ homeMenuClose }}" style="position:relative">
           <button onClick="{{ homeMenuToggle }}" aria-haspopup="true" aria-expanded="{{ homeMenuExpanded }}" style="background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:{{ homeNav.color }};border-bottom:1.5px solid {{ homeNav.line }}" style-hover="color:#C95440">
             <span style="width:7px;height:7px;border-radius:50%;background:{{ homeNav.dot }}"></span>Home<span style="font-size:10px;margin-left:1px">▾</span>
@@ -102,11 +103,33 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
         </div>
+        <sc-if value="{{ navWide }}" hint-placeholder-val="{{ true }}">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
           <button onClick="{{ n.go }}" style="background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:{{ n.color }};border-bottom:1.5px solid {{ n.line }}" style-hover="color:#C95440">
             <span style="width:7px;height:7px;border-radius:50%;background:{{ n.dot }}"></span>{{ n.label }}
           </button>
         </sc-for>
+        </sc-if>
+        <sc-if value="{{ navNarrow }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ mNav.booking.go }}" style="background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:{{ mNav.booking.color }};border-bottom:1.5px solid {{ mNav.booking.line }}" style-hover="color:#C95440">
+            <span style="width:7px;height:7px;border-radius:50%;background:{{ mNav.booking.dot }}"></span>Booking
+          </button>
+          <div style="position:relative">
+            <button onClick="{{ mNav.toggle }}" aria-label="選單" aria-haspopup="true" aria-expanded="{{ mNav.expanded }}" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px dashed {{ mNav.line }};border-radius:3px;background:{{ mNav.bg }};color:{{ mNav.ink }};cursor:pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="{{ mNav.icon }}"></path></svg>
+            </button>
+            <sc-if value="{{ mNav.open }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ mNav.close }}" style="position:fixed;inset:0;z-index:25"></div>
+              <div style="position:absolute;top:100%;right:0;padding-top:8px;z-index:30">
+                <div style="min-width:200px;background:#FFF9EE;border:2px dashed #90AFA0;border-radius:3px;padding:6px;display:flex;flex-direction:column;box-shadow:0 12px 28px -14px rgba(46,43,36,.4);animation:woSlideDown .2s ease both">
+                  <sc-for list="{{ mNav.items }}" as="mi" hint-placeholder-count="5">
+                    <button onClick="{{ mi.go }}" style="display:flex;align-items:center;gap:8px;text-align:left;background:none;border:0;border-radius:3px;padding:10px 12px;min-height:44px;cursor:pointer;font-size:15px;font-weight:600;color:{{ mi.color }}" style-hover="color:#C95440;background:#F6F1E5"><span style="width:6px;height:6px;border-radius:50%;background:{{ mi.dot }}"></span>{{ mi.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
       </nav>
     </div>
   </header>
@@ -118,7 +141,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         <div style="display:flex;flex-direction:column;gap:22px">
           <div style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.18em;color:#C95440">ISSUE NO. 01 — GENERAL ENGLISH &amp; IELTS</div>
           <h1 style="margin:0;font-family:'Essays1743','IM Fell English',serif;font-weight:400;font-size:clamp(44px,7vw,84px);line-height:1.02;color:#42685D;letter-spacing:.01em;-webkit-text-stroke:1.2px #42685D">Welcome to <span style="color:#C95440;-webkit-text-stroke:1.2px #C95440;letter-spacing:.03em">WRITE</span><span style="font-size:.78em">opia.</span></h1>
-          <p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,2.4vw,26px);color:#403E34;line-height:1.35;max-width:30ch">A little space to learn, think and express yourself.</p>
+          <div aria-label="Visitor stats" style="display:flex;flex-wrap:wrap;justify-content:flex-start;gap:4px 18px;font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.12em;color:#42685D">
+            <span>TODAY <span style="color:#C95440">{{ visToday }}</span></span>
+            <span style="color:#C9BFA8">/</span>
+            <span>TOTAL VISITORS <span style="color:#C95440">{{ visTotal }}</span></span>
+          </div><p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,2.4vw,26px);color:#403E34;line-height:1.35;max-width:30ch">A little space to learn, think and express yourself.</p>
           <p style="margin:0;font-size:16px;line-height:1.8;max-width:46ch;text-wrap:pretty">從自然發音、文法到生活英文與寫作，再到雅思四大項目，我們都能教。想和同學一起<span style="color:rgba(44, 44, 43, 1);isolation:auto" data-token-index="0" data-notion-highlight="default_background" class="notion-enable-hover">鑽研英文語用，討論邏輯表達，讓我們（痛苦？）快樂的學習，</span>直到可以把英文說出口、寫成句！</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
             <button onClick="{{ goCourses }}" style="background:#C95440;color:#FFF9EE;border:0;border-radius:3px;padding:13px 22px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s,background .2s" style-hover="background:#B4462F;transform:translateY(-2px)">看看教學項目 →</button>
@@ -126,13 +153,9 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           </div>
         </div>
         <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 0 28px">
-          <div aria-label="Visitor stats" style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.12em;color:#42685D">
-            <span>TODAY <span style="color:#C95440">{{ visToday }}</span></span>
-            <span style="color:#C9BFA8">/</span>
-            <span>TOTAL VISITORS <span style="color:#C95440">{{ visTotal }}</span></span>
-          </div>
+          
           <div style="position:relative;width:min(100%,440px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid #D9D0BC;background:#EFE8D8">
-            <img src="assets/logo.jpg" alt="WRITEopia IELTS" style="position:absolute;left:50%;top:51%;width:104%;height:auto;transform:translate(-50%,-50%)">
+            <img src="assets/logo-home.png" alt="WRITEopia IELTS" style="position:absolute;left:50%;top:51%;width:104%;height:auto;transform:translate(-50%,-50%)">
           </div>
           <div style="position:absolute;left:0;bottom:0;background:#FFF9EE;border:1px solid #D9D0BC;padding:10px 14px;transform:rotate(-3deg);font-family:'Special Elite',monospace;font-size:12px;color:#42685D;letter-spacing:.08em">Enjoy Learning ✦ Think Critically</div>
           <div style="position:absolute;right:0;top:0;font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.1em;color:#C95440;border:1.5px solid #C95440;border-radius:50%;width:84px;height:84px;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(10deg);opacity:.85;line-height:1.2">EXPRESS<br>FREELY</div>
@@ -140,11 +163,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
       </section>
 
       <section style="border-top:1px solid #D9D0BC;border-bottom:1px solid #D9D0BC;background:#FFF9EE">
-        <div style="max-width:1180px;margin:0 auto;padding:22px clamp(18px,4vw,40px);display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div style="max-width:1180px;margin:0 auto;padding:clamp(16px,3vw,22px) clamp(18px,4vw,40px);display:flex;gap:clamp(5px,1.6vw,10px);flex-wrap:wrap;align-items:center">
           <sc-for list="{{ keyDots }}" as="k" hint-placeholder-count="9">
-            <span style="width:38px;height:38px;border-radius:50%;background:{{ k.bg }};color:#2E2B24;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:16px">{{ k.ch }}</span>
+            <span style="flex:none;width:clamp(26px,8vw,38px);height:clamp(26px,8vw,38px);border-radius:50%;background:{{ k.bg }};color:#2E2B24;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:clamp(12px,3.6vw,16px)">{{ k.ch }}</span>
           </sc-for>
-          <span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D;letter-spacing:.14em;margin-left:8px">PRONUNCIATION · GRAMMAR · EVERYDAY ENGLISH · WRITING · IELTS</span>
+          <sc-if value="{{ keyTagline }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D;letter-spacing:.14em;margin-left:8px">PRONUNCIATION · GRAMMAR · EVERYDAY ENGLISH · WRITING · IELTS</span></sc-if>
         </div>
       </section>
 
@@ -154,7 +177,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             <div style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.18em;color:#C95440">01 / OUR TEACHERS</div>
             <h2 style="margin:0;font-family:'Essays1743','IM Fell English',serif;font-weight:400;font-size:clamp(34px,4.4vw,50px);line-height:1.05;color:#42685D">Meet the <span style="color:#C95440">WRITE</span>opia teachers.</h2>
           </div>
-          <p style="margin:0;font-size:16px;line-height:1.8;max-width:38ch;text-wrap:pretty">WRITEopia 的老師們，陪你從發音、文法一路走到寫作與雅思。</p>
+          
         </div>
         <article style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,4vw,56px);align-items:end">
           <div style="position:relative;width:min(100%,340px);aspect-ratio:1/1.08">
@@ -294,13 +317,10 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;padding-top:6px">
               <span style="font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.16em;color:#42685D">FOLLOW · 最新貼文與免費學習資源</span>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px">
-                <sc-for list="{{ socials }}" as="s" hint-placeholder-count="3">
-                  <a href="{{ s.href }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#42685D;background:#FFF9EE;border:1px solid #D9D0BC;border-radius:3px;padding:10px 12px;min-height:56px;transition:border-color .2s,transform .2s" style-hover="border-color:#C95440;transform:translateY(-2px);color:#C95440">
-                    <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ s.bg }};color:#2E2B24;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:12px">{{ s.mark }}</span>
-                    <span style="display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:14px">{{ s.label }}</span><span style="font-family:'Special Elite',monospace;font-size:12px;color:#C95440">{{ s.handle }}</span><span style="font-size:12px;color:#403E34">{{ s.note }}</span></span>
-                  </a>
-                </sc-for>
+              <div style="display:flex;flex-wrap:wrap;gap:12px">
+                <a href="https://www.instagram.com/writeopia_tw/" target="_blank" rel="noopener" aria-label="Instagram @writeopia_tw" title="Instagram @writeopia_tw" style="width:52px;height:52px;border-radius:12px;background:#C95440;color:#FFF9EE;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s,background .2s" style-hover="transform:translateY(-2px);background:#42685D"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="https://www.threads.com/@writeopia_tw" target="_blank" rel="noopener" aria-label="Threads @writeopia_tw" title="Threads @writeopia_tw" style="width:52px;height:52px;border-radius:12px;background:#2E2B24;color:#FFF9EE;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s,background .2s" style-hover="transform:translateY(-2px);background:#42685D"><svg width="24" height="24" viewBox="0 0 192 192" fill="currentColor" aria-hidden="true"><path d="M141.5 88.99c-.83-.4-1.67-.78-2.52-1.15-1.49-27.33-16.42-42.98-41.49-43.14h-.34c-15 0-27.46 6.4-35.14 18.04l13.79 9.46c5.73-8.7 14.73-10.55 21.36-10.55h.23c8.26.05 14.49 2.45 18.52 7.14 2.93 3.41 4.89 8.12 5.87 14.07-7.33-1.25-15.26-1.63-23.74-1.14-23.88 1.37-39.24 15.3-38.2 34.67.52 9.83 5.42 18.28 13.78 23.8 7.07 4.67 16.17 6.95 25.63 6.43 12.49-.68 22.29-5.45 29.13-14.16 5.2-6.62 8.48-15.19 9.94-25.99 5.95 3.59 10.36 8.32 12.79 14 4.14 9.66 4.38 25.53-8.57 38.47-11.35 11.34-24.99 16.24-45.6 16.39-22.86-.17-40.15-7.5-51.39-21.79C35.15 131.39 29.75 112.5 29.55 88c.2-24.5 5.6-43.39 16.05-56.13C56.84 17.58 74.13 10.25 96.99 10.08c23.03.17 40.62 7.54 52.29 21.91 5.72 7.04 10.03 15.9 12.88 26.23l16.15-4.31c-3.44-12.73-8.86-23.69-16.23-32.76C147.13 2.73 125.06-6.55 97.07-6.75h-.11C68.99-6.55 47.24 2.77 32.29 20.95 18.98 37.13 12.12 59.65 11.89 87.93v.14c.23 28.28 7.09 50.8 20.4 66.98 14.95 18.18 36.7 27.5 64.67 27.7h.11c24.86-.17 42.39-6.68 56.83-21.1 18.89-18.87 18.32-42.53 12.1-57.05-4.47-10.41-12.99-18.87-24.5-24.61zm-42.94 40.39c-10.4.59-21.2-4.08-21.73-14.06-.39-7.4 5.27-15.66 22.33-16.65 1.95-.11 3.87-.17 5.75-.17 6.2 0 12 .6 17.27 1.75-1.97 24.54-13.5 28.57-23.62 29.13z"></path></svg></a>
+                <a href="https://www.youtube.com/@WRITEopia" target="_blank" rel="noopener" aria-label="YouTube @WRITEopia" title="YouTube @WRITEopia" style="width:52px;height:52px;border-radius:12px;background:#C95440;color:#FFF9EE;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s,background .2s" style-hover="transform:translateY(-2px);background:#42685D"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg></a>
               </div>
             </div>
           </div>
@@ -400,7 +420,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">PHONICS FOR CHILDREN &amp; ADULTS</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">自然發音課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
               <p style="margin:0;font-size:16px;line-height:1.9;text-wrap:pretty">我們的自然發音課程依照兒童與成人不同的學習特性，採用不同的教材與教學方式，但核心目標一致：<strong style="font-weight:700;color:#2E2B24">幫助學生掌握英文的基本拼讀規則，建立獨立拼讀及聽音拼寫的能力。</strong></p>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px;align-items:stretch">
@@ -435,6 +455,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 </ul>
                 <p style="margin:0;font-size:16px;line-height:1.9;font-weight:700;color:#42685D;text-wrap:pretty">兒童透過趣味活動與反覆練習建立基礎；成人則透過系統化學習與即時應用掌握規則。兩者的學習方式不同，但最終都以能夠獨立運用自然發音為目標。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showGrammar }}" hint-placeholder-val="{{ false }}">
@@ -444,18 +465,14 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">FOUNDATIONAL ENGLISH GRAMMAR</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">基礎英文文法課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程以師德文教出版的《國中英語文法與練習》全五冊為教學架構，系統性整理台灣國中階段的重要文法觀念與句型，幫助學生循序漸進地建立扎實的文法基礎，並為後續進階英文的學習做好準備。</p></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程以師德文教出版的《國中英語文法與練習》全五冊為教學架構，系統性整理台灣國中階段的重要文法觀念與句型，幫助學生循序漸進地建立扎實的文法基礎，並為後續進階英文的學習做好準備。</p></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/grammar-junior-high.png" alt="師德《國中英語文法與練習》1–5 冊" style="display:block;width:100%;height:auto"><figcaption style="font-size:13px;color:#42685D">師德《國中英語文法與練習》全五冊</figcaption></figure></div></div>
                   <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">課堂練習</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">老師會透過觀念講解、例句分析、文法練習及中英翻譯，引導學生理解不同文法規則的使用時機與句型結構。除了課本練習，也會依照學生的理解情況補充題目與造句活動，讓學生練習將文法運用在實際表達中。</p></div>
                   <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">學習目標</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">完成全套課程並充分掌握所學內容後，學生應能理解國中階段的核心英文文法，辨認常見句型結構，並運用學過的時態與文法規則，自行組織及寫出基本英文句子，為進一步的段落與文章寫作奠定基礎。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程涵蓋的文法知識也能作為準備全民英檢初級（GEPT Elementary）的基礎，並幫助學生銜接高中英文課程。</p></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/grammar-junior-high.png" alt="師德《國中英語文法與練習》1–5 冊" style="display:block;width:100%;height:auto">
-                  <figcaption style="font-size:13px;color:#42685D">師德《國中英語文法與練習》全五冊</figcaption>
-                </figure>
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:center;background:#F6F1E5;border-radius:3px;padding:clamp(18px,3vw,28px)">
                 <div style="display:flex;flex-direction:column;gap:8px">
@@ -472,6 +489,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <span style="font-size:15px;font-weight:700;color:#42685D">適合對象</span>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合國中以上的學生，以及希望重新打好英文基礎的成人學習者。如果你對文法觀念不夠熟悉、英文造句時經常出錯，或希望有系統地重新整理與補強文法，都很適合透過這門課程建立穩固的基礎。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showPron }}" hint-placeholder-val="{{ false }}">
@@ -481,7 +499,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ADVANCED ENGLISH PRONUNCIATION</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">進階英文發音課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:10px">
                 <div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D">Linking</span><span style="font-size:13px;font-weight:600;color:#403E34">連音</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D">Elision</span><span style="font-size:13px;font-weight:600;color:#403E34">省音</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D">Flap T</span><span style="font-size:13px;font-weight:600;color:#403E34">閃音 T</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D">Stress</span><span style="font-size:13px;font-weight:600;color:#403E34">單字與句子重音</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:13px;color:#42685D">Weak Forms</span><span style="font-size:13px;font-weight:600;color:#403E34">弱讀</span></div>
@@ -501,6 +519,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合已具備基本英文發音與拼讀能力，希望進一步改善口說自然度及聽力理解的學生。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你說英文時經常習慣一個字、一個字地唸，或是明明認識句子裡的單字，卻在聽母語者說話時難以辨認，這門課很適合幫助你理解並練習自然口語中的發音技巧。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showEveryday }}" hint-placeholder-val="{{ false }}">
@@ -510,7 +529,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">EVERYDAY ENGLISH</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">生活英文課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:8px"><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">日常聊天</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">旅遊</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">職場溝通</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">生活情境</span></div>
               <div style="display:flex;flex-direction:column">
@@ -523,6 +542,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <span style="font-size:15px;font-weight:700;color:#42685D">適合對象</span>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合希望提升日常英文溝通能力，或有特定生活、旅遊及工作需求的學習者。無論是想加強口說、學習更自然的英文表達，或希望課程能更貼近自己的興趣與生活，都可以依個人需求安排學習內容。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showWriting1 }}" hint-placeholder-val="{{ false }}">
@@ -532,16 +552,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">FOUNDATIONAL ACADEMIC WRITING</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">英文寫作 1｜基礎寫作</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程採用牛津大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">Effective Academic Writing, Second Edition</em>，以 Intro（Developing Ideas）及 Level 1（The Paragraph）兩冊為主要教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">從基礎英文句子的組織與想法發展開始，逐步學習如何撰寫結構完整、內容清楚且具有連貫性的英文段落，幫助學生建立系統性的寫作能力。</p></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程採用牛津大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">Effective Academic Writing, Second Edition</em>，以 Intro（Developing Ideas）及 Level 1（The Paragraph）兩冊為主要教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">從基礎英文句子的組織與想法發展開始，逐步學習如何撰寫結構完整、內容清楚且具有連貫性的英文段落，幫助學生建立系統性的寫作能力。</p></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/effective-academic-writing-intro-1.png" alt="Effective Academic Writing Second Edition：Intro 與 Level 1" style="display:block;width:100%;max-width:440px;height:auto;align-self:flex-start"><figcaption style="font-size:13px;color:#42685D;align-self:flex-start">Effective Academic Writing · Intro &amp; Level 1</figcaption></figure></div></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/effective-academic-writing-intro-1.png" alt="Effective Academic Writing Second Edition：Intro 與 Level 1" style="display:block;width:100%;max-width:440px;height:auto;align-self:center">
-                  <figcaption style="font-size:13px;color:#42685D;align-self:center">Effective Academic Writing · Intro &amp; Level 1</figcaption>
-                </figure>
               </div>
               <div style="display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px dashed #C9BFA8">
                 <span style="font-size:15px;font-weight:700;color:#C95440">課堂練習</span>
@@ -564,6 +580,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合已具備基本英文文法與造句能力，但還不熟悉英文寫作架構的學生。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你經常不知道如何開始寫作、容易將中文逐字翻譯成英文，或是能寫出單句，卻不知道如何將想法組織成完整段落，這門課很適合作為英文寫作的起點。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showWriting2 }}" hint-placeholder-val="{{ false }}">
@@ -573,16 +590,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ACADEMIC ESSAY WRITING</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">英文寫作 2｜短篇文章寫作</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用牛津大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">Effective Academic Writing 2: The Short Essay</em>（Second Edition），延續寫作 1 的段落寫作基礎，進一步學習如何將不同觀點與支持細節組織成結構完整、邏輯清楚的多段落英文文章。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">教材涵蓋描述文（Descriptive Essays）、敘事文（Narrative Essays）、比較對照文（Comparison-Contrast Essays）、觀點文（Opinion Essays）及因果文（Cause-and-Effect Essays），幫助學生熟悉不同寫作目的所需要的文章架構與表達方式。</p></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用牛津大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">Effective Academic Writing 2: The Short Essay</em>（Second Edition），延續寫作 1 的段落寫作基礎，進一步學習如何將不同觀點與支持細節組織成結構完整、邏輯清楚的多段落英文文章。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">教材涵蓋描述文（Descriptive Essays）、敘事文（Narrative Essays）、比較對照文（Comparison-Contrast Essays）、觀點文（Opinion Essays）及因果文（Cause-and-Effect Essays），幫助學生熟悉不同寫作目的所需要的文章架構與表達方式。</p></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/effective-academic-writing-2.png" alt="Effective Academic Writing 2: The Short Essay" style="display:block;width:100%;max-width:300px;height:auto;align-self:flex-start"><figcaption style="font-size:13px;color:#42685D;align-self:flex-start">Effective Academic Writing 2 · The Short Essay</figcaption></figure></div></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/effective-academic-writing-2.png" alt="Effective Academic Writing 2: The Short Essay" style="display:block;width:100%;max-width:300px;height:auto;align-self:center">
-                  <figcaption style="font-size:13px;color:#42685D;align-self:center">Effective Academic Writing 2 · The Short Essay</figcaption>
-                </figure>
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px">
                 <div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:12px;color:#42685D">Descriptive</span><span style="font-size:13px;font-weight:600;color:#403E34">描述文</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:12px;color:#42685D">Narrative</span><span style="font-size:13px;font-weight:600;color:#403E34">敘事文</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:12px;color:#42685D">Comparison-Contrast</span><span style="font-size:13px;font-weight:600;color:#403E34">比較對照文</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:12px;color:#42685D">Opinion</span><span style="font-size:13px;font-weight:600;color:#403E34">觀點文</span></div><div style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:#DCE6DF;border-radius:3px"><span style="font-family:'Special Elite',monospace;font-size:12px;color:#42685D">Cause-and-Effect</span><span style="font-size:13px;font-weight:600;color:#403E34">因果文</span></div>
@@ -601,6 +614,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合已具備基本英文文法與段落寫作能力，希望進一步提升文章組織與論點發展能力的學生。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你已經能寫出完整段落，但面對較長的英文作文時，經常不知道如何安排架構、延伸想法，或讓不同段落自然銜接，這門課很適合幫助你從段落寫作進階到完整的短篇文章寫作。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showReading }}" hint-placeholder-val="{{ false }}">
@@ -610,16 +624,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ENGLISH READING LITERACY</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">英文閱讀素養課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程選用希伯崙股份有限公司出版的《英語閱讀素養：歐美文學名著選》、《中學生必備英語閱讀素養：經典故事篇》、《世界文化篇》及《培養英語閱讀素養：看經典故事學英語》等教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">內容涵蓋經典文學、童話故事、世界文化及不同主題的閱讀文章。老師會依照學生的英文程度、閱讀能力與興趣選擇合適的篇章，讓學生透過多元的閱讀素材累積字彙、熟悉英文句型，並拓展對不同文化與議題的認識。</p></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程選用希伯崙股份有限公司出版的《英語閱讀素養：歐美文學名著選》、《中學生必備英語閱讀素養：經典故事篇》、《世界文化篇》及《培養英語閱讀素養：看經典故事學英語》等教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">內容涵蓋經典文學、童話故事、世界文化及不同主題的閱讀文章。老師會依照學生的英文程度、閱讀能力與興趣選擇合適的篇章，讓學生透過多元的閱讀素材累積字彙、熟悉英文句型，並拓展對不同文化與議題的認識。</p></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/reading-literacy.png" alt="LiveABC 英語閱讀素養系列教材" style="display:block;width:100%;height:auto"><figcaption style="font-size:13px;color:#42685D">LiveABC 英語閱讀素養系列</figcaption></figure></div></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/reading-literacy.png" alt="LiveABC 英語閱讀素養系列教材" style="display:block;width:100%;height:auto">
-                  <figcaption style="font-size:13px;color:#42685D">LiveABC 英語閱讀素養系列</figcaption>
-                </figure>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:8px"><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">經典文學</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">童話故事</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">世界文化</span><span style="padding:8px 14px;background:#DCE6DF;border-radius:20px;font-size:13px;font-weight:600;color:#42685D">多元主題文章</span></div>
               <div style="display:flex;flex-direction:column">
@@ -632,6 +642,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你經常覺得英文文章太長、不知道哪些資訊重要，或是認識大部分單字，卻仍然無法掌握文章意思，又或者希望自己在閱讀時能有更深入的理解與思考，這門課都很適合。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程不限於國中生，高中生及成人學習者也可以依照實際程度與興趣安排閱讀內容。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsGrammar }}" hint-placeholder-val="{{ false }}">
@@ -641,16 +652,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS GRAMMAR</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">雅思文法課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用劍橋大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">IELTS Grammar for Bands 6.5 and above</em>，這是一本針對中高級英語學習者、以雅思 6.5 分以上為目標的文法教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">教材共 25 個單元，涵蓋雅思備考所需的重要文法觀念，並結合聽力、閱讀及寫作等雅思考試題型，讓學生學習如何在實際考試情境中運用文法。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">雖然教材定位偏向中高級程度，但我們也會依照學生的實際能力調整教學內容。對於文法基礎尚未穩固的學生，老師會先補充必要的基礎觀念，再逐步帶入進階文法與雅思題型，讓學生能循序漸進地學習。</p></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用劍橋大學出版社出版的 <em style="font-style:italic;font-weight:600;color:#2E2B24">IELTS Grammar for Bands 6.5 and above</em>，這是一本針對中高級英語學習者、以雅思 6.5 分以上為目標的文法教材。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">教材共 25 個單元，涵蓋雅思備考所需的重要文法觀念，並結合聽力、閱讀及寫作等雅思考試題型，讓學生學習如何在實際考試情境中運用文法。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">雖然教材定位偏向中高級程度，但我們也會依照學生的實際能力調整教學內容。對於文法基礎尚未穩固的學生，老師會先補充必要的基礎觀念，再逐步帶入進階文法與雅思題型，讓學生能循序漸進地學習。</p></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/ielts-grammar.png" alt="IELTS Grammar for Bands 6.5 and above" style="display:block;width:100%;max-width:300px;height:auto;align-self:flex-start"><figcaption style="font-size:13px;color:#42685D;align-self:flex-start">IELTS Grammar for Bands 6.5 and above</figcaption></figure></div></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/ielts-grammar.png" alt="IELTS Grammar for Bands 6.5 and above" style="display:block;width:100%;max-width:300px;height:auto;align-self:center">
-                  <figcaption style="font-size:13px;color:#42685D;align-self:center">IELTS Grammar for Bands 6.5 and above</figcaption>
-                </figure>
               </div>
               <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">課堂練習</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">老師會根據學生的文法程度與常見錯誤安排教學，透過觀念講解、例句分析、文法練習及雅思模擬題型，幫助學生理解不同規則的使用時機。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">除了教材練習，也會針對雅思口說與寫作中常見的文法問題進行補充，例如時態運用、複雜句型、從屬子句及句子結構等，讓學生練習將文法知識應用在實際表達中。</p></div>
@@ -670,6 +677,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你經常在口說或寫作時出現文法錯誤、不確定不同句型的使用時機，或希望在正式進入雅思專項訓練前，先有系統地整理與補強文法，這門課會很適合。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">由於教材本身偏向中高級程度，<strong style="font-weight:700;color:#2E2B24">課程並非針對完全零基礎的學習者設計</strong>。老師會依照學生的程度評估需要補強的內容，讓學生在適合自己的起點上逐步提升文法能力。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsLR }}" hint-placeholder-val="{{ false }}">
@@ -679,16 +687,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS LISTENING &amp; READING</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">雅思聽力與閱讀課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,4vw,40px);align-items:start">
+              <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column">
-                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span></div><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程會依照學生的英文程度與備考需求，選用劍橋官方雅思備考教材或歷屆官方真題，並搭配自編講義與補充學習資源，幫助學生熟悉考試題型，有系統地提升聽力與閱讀能力。</p><ul style="margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.8"><li><strong style="font-weight:700;color:#2E2B24">The Official Cambridge Guide to IELTS</strong>：介紹雅思考試架構、常見題型與應試策略，幫助學生建立完整的備考觀念。</li><li><strong style="font-weight:700;color:#2E2B24">Cambridge IELTS Academic / General Training – Authentic Practice Tests</strong>：透過官方真題練習，熟悉題目設計、考試難度及作答時間，並找出需要加強的部分。</li><li><strong style="font-weight:700;color:#2E2B24">自編補充講義</strong>：針對常見同義轉換、實用字彙、易錯題型及解題策略進行整理與補充。</li></ul></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span></div><div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px clamp(20px,4vw,40px)"><div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px"><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程會依照學生的英文程度與備考需求，選用劍橋官方雅思備考教材或歷屆官方真題，並搭配自編講義與補充學習資源，幫助學生熟悉考試題型，有系統地提升聽力與閱讀能力。</p><ul style="margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.8"><li><strong style="font-weight:700;color:#2E2B24">The Official Cambridge Guide to IELTS</strong>：介紹雅思考試架構、常見題型與應試策略，幫助學生建立完整的備考觀念。</li><li><strong style="font-weight:700;color:#2E2B24">Cambridge IELTS Academic / General Training – Authentic Practice Tests</strong>：透過官方真題練習，熟悉題目設計、考試難度及作答時間，並找出需要加強的部分。</li><li><strong style="font-weight:700;color:#2E2B24">自編補充講義</strong>：針對常見同義轉換、實用字彙、易錯題型及解題策略進行整理與補充。</li></ul></div><figure style="margin:0;flex:0 1 400px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:8px"><img src="assets/courses/ielts-listening-reading.png" alt="The Official Cambridge Guide to IELTS 與 Cambridge IELTS Academic 19–21" style="display:block;width:100%;height:auto"><figcaption style="font-size:12px;line-height:1.6;color:#7A7566">＊圖片為示意圖，實際書本以官方販售版本為主。</figcaption></figure></div></div>
                 </div>
-                <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-                  <img src="assets/courses/ielts-listening-reading.png" alt="The Official Cambridge Guide to IELTS 與 Cambridge IELTS Academic 19–21" style="display:block;width:100%;height:auto">
-                  <figcaption style="font-size:12px;line-height:1.6;color:#7A7566">＊圖片為示意圖，實際書本以官方販售版本為主。</figcaption>
-                </figure>
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px">
                 <div style="background:#F6F1E5;border-radius:3px;padding:18px 20px;display:flex;flex-direction:column;gap:10px">
@@ -720,6 +724,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合已具備一定英文基礎，希望開始準備雅思聽力與閱讀的學生。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">由於課程會直接使用雅思考題進行訓練，<strong style="font-weight:700;color:#2E2B24">建議學生具備約 CEFR B1 或以上的英文能力</strong>。若目前在字彙、文法或基本聽讀理解方面仍有明顯困難，老師會依照實際程度，建議先補強必要的基礎能力，再逐步進入雅思專項練習。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsSpeaking }}" hint-placeholder-val="{{ false }}">
@@ -729,7 +734,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS SPEAKING</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">雅思口說課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
               <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用老師自行整理的雅思口說講義，內容涵蓋 IELTS Speaking Part 1–3 的考試技巧、歷年口說題庫、常見話題，以及實用字彙與口語表達。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">老師會依照學生的英文程度、目標分數及口說弱點安排練習，幫助學生熟悉不同題型的作答方式，建立適合自己的回答策略。</p></div>
@@ -750,6 +755,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">適合已具備基本英文溝通能力，希望準備雅思口說考試，或進一步提升回答流暢度、內容組織及語言準確度的學生。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你經常不知道如何延伸回答、容易在考試時緊張或突然想不到英文，或是明明準備過題目，實際開口時卻無法自然表達，這門課都能針對你的弱點安排練習。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsWriting }}" hint-placeholder-val="{{ false }}">
@@ -759,7 +765,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS WRITING</span>
                   <span style="font-family:'Essays1743','IM Fell English',serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">雅思寫作課程</span>
                 </div>
-                <button onClick="{{ closeCourse }}" style="min-height:44px;padding:8px 16px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600">收合 ↑</button>
+                <button onClick="{{ closeCourse }}" aria-label="收合" title="收合" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin-left:auto;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
               </div>
               <div style="display:flex;flex-direction:column">
                 <div style="display:flex;flex-direction:column;gap:8px;padding:16px 0;border-top:1px dashed #C9BFA8"><span style="font-size:15px;font-weight:700;color:#C95440">使用教材</span><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">課程使用老師自行整理的雅思寫作講義，涵蓋 IELTS Writing Task 1 與 Task 2 的常見題型、寫作架構、答題策略及實用的學術英文表達。</p><p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">老師會依照學生的英文程度、目標分數及寫作弱點，安排合適的練習內容，並提供額外的範文分析、字彙整理與補充教材，讓學生有系統地建立雅思寫作能力。</p></div>
@@ -780,6 +786,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">如果你經常不知道如何開始寫作、難以發展想法，或是能寫出英文句子，卻無法將內容組織成完整且有說服力的文章，這門課可以針對你的問題安排練習。</p>
                 <p style="margin:0;font-size:15px;line-height:1.9;text-wrap:pretty">對於文法或基本段落寫作能力尚未穩固的學生，老師也會依照實際程度，建議先補強必要的寫作基礎，再進入雅思專項訓練。</p>
               </div>
+              <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
         </section>
@@ -865,46 +872,68 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           </div>
         </sc-for>
       </div>
-      <div style="display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;row-gap:10px;margin-top:8px;align-items:center">
-        <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#90AFA0">INDEX</span>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+        <span style="font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.16em;color:#90AFA0;margin-right:4px">INDEX</span>
         <sc-for list="{{ matFilters }}" as="f" hint-placeholder-count="5">
-          <button onClick="{{ f.go }}" style="display:flex;align-items:baseline;gap:4px;min-height:44px;padding:8px 16px;border:2px dashed {{ f.line }};border-radius:3px;background:{{ f.bg }};cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:16px;font-weight:{{ f.weight }};color:{{ f.color }};transition:color .2s" style-hover="color:#C95440;border-color:#C95440">{{ f.label }}<sup style="font-family:'Special Elite',monospace;font-size:11px;font-weight:400;color:#90AFA0">{{ f.count }}</sup></button>
+          <button onClick="{{ f.go }}" aria-pressed="{{ f.pressed }}" style="display:flex;align-items:baseline;gap:5px;min-height:34px;padding:5px 14px;border:0;border-radius:999px;background:{{ f.bg }};box-shadow:{{ f.shadow }};transform:{{ f.shift }};cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:14px;font-weight:700;color:{{ f.color }};transition:filter .2s,transform .15s,box-shadow .15s" style-hover="filter:brightness(.96)" style-active="transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(46,43,36,.3)">{{ f.label }}<sup style="font-family:'Special Elite',monospace;font-size:10px;font-weight:400;color:{{ f.countColor }}">{{ f.count }}</sup></button>
         </sc-for>
+        <button onClick="{{ matSearch.toggle }}" aria-label="搜尋教材" aria-expanded="{{ matSearch.expanded }}" title="搜尋教材" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px dashed {{ matSearch.line }};border-radius:50%;background:{{ matSearch.btnBg }};color:{{ matSearch.iconColor }};cursor:pointer;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
       </div>
+      <sc-if value="{{ matSearch.open }}" hint-placeholder-val="{{ false }}">
+        <div role="search" style="display:flex;align-items:center;gap:10px;width:100%;max-width:420px;min-height:44px;padding:0 6px 0 14px;border:1.5px dashed {{ matSearch.line }};border-radius:3px;background:#FFF9EE;animation:woSlideDown .22s ease both">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#90AFA0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input type="search" ref="{{ matSearch.ref }}" value="{{ matSearch.q }}" onChange="{{ matSearch.onInput }}" placeholder="搜尋教材，如 Maps、口說" aria-label="搜尋教材關鍵字" style="flex:1;min-width:0;min-height:40px;border:0;outline:none;background:transparent;font-family:'Noto Sans TC',sans-serif;font-size:15px;color:#403E34">
+        </div>
+      </sc-if>
+      </div>
+      <sc-if value="{{ matSearch.active }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:15px;color:#6B6658">
+          <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.14em;color:#90AFA0">RESULTS</span>
+          <span>{{ matSearch.label }}</span>
+          <button onClick="{{ matSearch.clear }}" style="min-height:44px;padding:0 4px;border:0;background:none;color:#C95440;font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px">清除搜尋</button>
+        </div>
+      </sc-if>
       <sc-for list="{{ materialGroups }}" as="mg" hint-placeholder-count="2">
       <section id="{{ mg.id }}" style="display:flex;flex-direction:column;gap:24px;margin-top:20px">
       <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;border-bottom:1.5px solid #42685D;padding-bottom:12px">
         <h2 style="margin:0;font-family:'Essays1743','IM Fell English',serif;font-weight:400;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">{{ mg.title }}</h2>
         <span style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.14em;color:#90AFA0">{{ mg.label }}</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:22px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:18px">
         <sc-if value="{{ mg.empty }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:0;font-size:15px;color:#6B6658">這個類別目前沒有教材。</p>
+          <p style="margin:0;font-size:15px;color:#6B6658">{{ mg.emptyText }}</p>
         </sc-if>
         <sc-for list="{{ mg.items }}" as="m" hint-placeholder-count="3">
-          <article style="background:#FFF9EE;border:1px solid #D9D0BC;border-radius:3px;display:flex;flex-direction:column;overflow:hidden">
-            <div style="aspect-ratio:2/1;background:{{ m.cover }};border-bottom:1px solid #D9D0BC;position:relative;display:flex;align-items:flex-end;padding:18px">
-              <span style="position:absolute;top:14px;left:14px;display:flex;gap:6px"><span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.12em;padding:4px 9px;border-radius:2px;background:{{ m.tagBg }};color:{{ m.tagColor }}">{{ m.tag }}</span><sc-if value="{{ m.isNew }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;padding:4px 9px;border-radius:2px;background:#C95440;color:#FFF9EE">最新</span></sc-if></span>
-              <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:28px;line-height:1.05;color:#42685D">{{ m.coverTitle }}</span>
+          <article style="background:#FFF9EE;border:1px solid #D9D0BC;border-left:5px solid {{ m.spine }};border-radius:3px;display:flex;flex-direction:column;gap:14px;padding:20px 20px 18px;transition:transform .2s,box-shadow .2s,border-color .2s" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(46,43,36,.35)">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:{{ m.cover }};color:#2E2B24">{{ m.typeLabel }}</span>
+              <sc-if value="{{ m.isNew }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#C95440;color:#FFF9EE">最新</span></sc-if>
+              <span style="margin-left:auto;font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.14em;color:{{ m.tagInk }}">{{ m.tag }}</span>
             </div>
-            <div style="padding:20px 20px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
-              <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.1em;color:#42685D">{{ m.meta }}</span>
-              <h3 style="margin:0;font-size:18px;font-weight:700;color:#403E34;line-height:1.4">{{ m.title }}</h3>
-              <div style="flex:1"></div>
-              <sc-if value="{{ m.isFree }}" hint-placeholder-val="{{ true }}">
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
-                  <sc-for list="{{ m.fileList }}" as="fl" hint-placeholder-count="1">
-                    <a href="{{ fl.href }}" target="_blank" rel="noopener" style="display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;padding:8px 14px;border:1px solid #42685D;border-radius:3px;background:#F6F1E5;color:#42685D;font-size:14px;font-weight:600;text-decoration:none" style-hover="background:#DCE6DF;color:#42685D"><span style="overflow-wrap:anywhere">{{ fl.label }}</span><span style="flex:none">免費下載 ↓</span></a>
-                  </sc-for>
-                </div>
-              </sc-if>
-              <sc-if value="{{ m.isPaid }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-                  <span style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:26px;color:#C95440">{{ m.priceLabel }}</span>
-                  <a href="{{ m.buy }}" target="_blank" rel="noopener" style="min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid #C95440;border-radius:3px;background:#C95440;color:#FFF9EE;font-size:15px;font-weight:700;text-decoration:none" style-hover="background:#A9402F;color:#FFF9EE">購買 ↗</a>
-                </div>
-              </sc-if>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h3 style="margin:0;font-size:17px;font-weight:700;color:#2E2B24;line-height:1.5;text-wrap:pretty">{{ m.title }}</h3>
+              <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:18px;line-height:1.2;color:#42685D">{{ m.coverTitle }}</span>
+              <span style="font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.1em;color:#90AFA0">{{ m.meta }}</span>
             </div>
+            <div style="flex:1"></div>
+            <sc-if value="{{ m.isFree }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;border-top:1px dashed #C9BFA8;padding-top:8px">
+                <sc-for list="{{ m.fileList }}" as="fl" hint-placeholder-count="1">
+                  <a href="{{ fl.href }}" target="_blank" rel="noopener" aria-label="免費下載 {{ fl.label }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 6px 6px 8px;margin:0 -6px;border-radius:3px;color:#403E34;text-decoration:none;font-size:14px;transition:background .2s" style-hover="background:#F6F1E5;color:#42685D">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#90AFA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
+                    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.label }}</span>
+                    <span style="flex:none;width:32px;height:32px;border-radius:50%;background:#42685D;color:#FFF9EE;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"></path><path d="m6 11 6 6 6-6"></path><path d="M5 20h14"></path></svg></span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ m.isPaid }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px dashed #C9BFA8;padding-top:14px">
+                <span style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:26px;line-height:1;color:#C95440">{{ m.priceLabel }}</span>
+                <a href="{{ m.buy }}" target="_blank" rel="noopener" style="min-height:40px;display:flex;align-items:center;gap:6px;padding:0 16px;border-radius:3px;background:#C95440;color:#FFF9EE;font-size:14px;font-weight:700;text-decoration:none;transition:background .2s" style-hover="background:#A9402F;color:#FFF9EE">購買 ↗</a>
+              </div>
+            </sc-if>
           </article>
         </sc-for>
       </div>
@@ -991,7 +1020,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         <div style="padding:clamp(26px,4vw,44px);display:flex;flex-direction:column;gap:18px;justify-content:center">
           <span style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.16em;color:#C95440">THIS MONTH'S SLOTS</span>
           <h2 style="margin:0;font-family:'Noto Sans TC',sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,28px);line-height:1.4;color:#42685D">查看目前開放時段，直接線上預約</h2>
-          <p style="margin:0;font-size:16px;line-height:1.8;text-wrap:pretty">點下方按鈕會開啟預約頁，選好時間並簡單填寫你的學習需求。預約成功後，你會收到確認信與上課連結。</p>
+          <p style="margin:0;font-size:16px;line-height:1.8;text-wrap:pretty">點下方按鈕會開啟預約頁，選好時間並簡單填寫你的學習需求。送出預約後，老師會聯繫你繳費；完成繳費即會收到確認信與上課連結。</p>
           <a href="{{ bookingUrl }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:10px;background:#C95440;color:#FFF9EE;text-decoration:none;border-radius:3px;padding:15px 24px;min-height:52px;font-size:16px;font-weight:700;transition:transform .2s,background .2s" style-hover="background:#B4462F;color:#FFF9EE;transform:translateY(-2px)">選擇試課時段 ↗</a>
         </div>
         <ol style="margin:0;padding:clamp(26px,4vw,44px);list-style:none;display:flex;flex-direction:column;background:#DCE6DF">
@@ -1044,22 +1073,22 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         </div>
         <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(32px,5vw,64px)">
         <div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:32px">
-        <label style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px">
+        <label style="display:flex;align-items:center;gap:12px;flex-wrap:nowrap">
           <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:{{ bt.muted }}">題型</span>
           <span style="position:relative;display:inline-flex;align-items:center">
-            <select value="{{ typeSel.value }}" onChange="{{ typeSel.onChange }}" aria-label="篩選題型" style="appearance:none;-webkit-appearance:none;min-height:46px;min-width:220px;padding:8px 44px 8px 16px;border:2px dashed {{ bt.line }};border-radius:3px;background:{{ bt.bg }};color:{{ bt.ink }};font-family:'Noto Sans TC',sans-serif;font-size:15px;font-weight:600;cursor:pointer">
+            <select value="{{ typeSel.value }}" onChange="{{ typeSel.onChange }}" aria-label="篩選題型" style="appearance:none;-webkit-appearance:none;min-height:32px;min-width:140px;padding:2px 30px 2px 10px;border:1.5px dashed {{ bt.line }};border-radius:3px;background:{{ bt.bg }};color:{{ bt.ink }};font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:600;cursor:pointer;outline:none" style-focus="border-color:{{ bt.accent }}">
               <sc-for list="{{ typeChips }}" as="t" hint-placeholder-count="6">
                 <option value="{{ t.key }}">{{ t.label }}（{{ t.count }}）</option>
               </sc-for>
             </select>
-            <span aria-hidden="true" style="position:absolute;right:16px;pointer-events:none;font-size:12px;color:{{ bt.accent }}">▼</span>
+            <span aria-hidden="true" style="position:absolute;right:10px;pointer-events:none;font-size:8px;color:{{ bt.accent }}">▼</span>
           </span>
         </label>
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px">
-        <form onSubmit="{{ blogSearch.submit }}" role="search" style="display:flex;align-items:center;gap:10px;flex:1 1 280px;max-width:460px;min-height:48px;padding:0 6px 0 16px;border-radius:999px;background:{{ bt.hover }};border:1px solid {{ bt.line }}">
-          <span aria-hidden="true" style="font-size:16px;color:{{ bt.muted }}">⌕</span>
-          <input type="search" value="{{ blogSearch.draft }}" onChange="{{ blogSearch.onDraft }}" placeholder="搜尋文章關鍵字" aria-label="搜尋文章關鍵字" style="flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:{{ bt.ink }};font:inherit;font-size:15px;outline:none">
-          <button type="submit" style="min-height:38px;padding:6px 16px;border:0;border-radius:999px;background:{{ bt.accent }};color:{{ bt.bg }};font-size:14px;font-weight:700;cursor:pointer">搜尋</button>
+        <form onSubmit="{{ blogSearch.submit }}" role="search" style="display:flex;align-items:center;gap:10px;flex:1 1 200px;max-width:280px;min-height:32px;padding:0 3px 0 10px;border-radius:999px;background:{{ bt.hover }};border:1px solid {{ bt.line }}">
+          <span aria-hidden="true" style="font-size:13px;color:{{ bt.muted }}">⌕</span>
+          <input type="search" value="{{ blogSearch.draft }}" onChange="{{ blogSearch.onDraft }}" placeholder="搜尋文章關鍵字" aria-label="搜尋文章關鍵字" style="flex:1;min-width:0;min-height:28px;border:0;background:transparent;color:{{ bt.ink }};font:inherit;font-size:13px;outline:none">
+          <button type="submit" style="min-height:24px;padding:2px 10px;border:0;border-radius:999px;background:{{ bt.accent }};color:{{ bt.bg }};font-size:12px;font-weight:700;cursor:pointer">搜尋</button>
         </form>
           <sc-if value="{{ blogSearch.active }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:{{ bt.muted }}">
@@ -1112,21 +1141,21 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         </sc-if>
         </div>
         <aside style="flex:0 1 300px;min-width:min(100%,260px);display:flex;flex-direction:column;gap:28px;position:sticky;top:96px">
-          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid {{ bt.line }};border-radius:3px">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;width:100%;max-width:240px;box-sizing:border-box;border:1px solid {{ bt.line }};border-radius:3px">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-              <button onClick="{{ cal.prev }}" aria-label="上個月" style="width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:{{ bt.ink }};font-size:16px;cursor:pointer" style-hover="background:{{ bt.hover }}">‹</button>
-              <span style="font-size:15px;font-weight:700;color:{{ bt.ink }}">{{ cal.title }}</span>
-              <button onClick="{{ cal.next }}" aria-label="下個月" style="width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:{{ bt.ink }};font-size:16px;cursor:pointer" style-hover="background:{{ bt.hover }}">›</button>
+              <button onClick="{{ cal.prev }}" aria-label="上個月" style="width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:{{ bt.ink }};font-size:14px;cursor:pointer" style-hover="background:{{ bt.hover }}">‹</button>
+              <span style="font-size:13px;font-weight:700;color:{{ bt.ink }}">{{ cal.title }}</span>
+              <button onClick="{{ cal.next }}" aria-label="下個月" style="width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:{{ bt.ink }};font-size:14px;cursor:pointer" style-hover="background:{{ bt.hover }}">›</button>
             </div>
             <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center">
               <sc-for list="{{ cal.heads }}" as="wd" hint-placeholder-count="7">
-                <span style="font-size:12px;color:{{ bt.muted }};padding:4px 0">{{ wd }}</span>
+                <span style="font-size:11px;color:{{ bt.muted }};padding:2px 0">{{ wd }}</span>
               </sc-for>
               <sc-for list="{{ cal.cells }}" as="c" hint-placeholder-count="35">
-                <button onClick="{{ c.go }}" disabled="{{ c.off }}" aria-label="{{ c.aria }}" style="aspect-ratio:1;min-width:0;padding:0;border:0;border-radius:50%;background:{{ c.bg }};color:{{ c.color }};font-size:13px;font-weight:{{ c.weight }};cursor:{{ c.cursor }};display:flex;align-items:center;justify-content:center">{{ c.d }}</button>
+                <button onClick="{{ c.go }}" disabled="{{ c.off }}" aria-label="{{ c.aria }}" style="aspect-ratio:1;min-width:0;padding:0;border:0;border-radius:50%;background:{{ c.bg }};color:{{ c.color }};font-size:11.5px;font-weight:{{ c.weight }};cursor:{{ c.cursor }};display:flex;align-items:center;justify-content:center">{{ c.d }}</button>
               </sc-for>
             </div>
-            <span style="font-size:12px;color:{{ bt.muted }}">有底色的日期有文章，點擊即可查看。</span>
+            <span style="font-size:11px;line-height:1.5;color:{{ bt.muted }}">有底色的日期有文章，點擊即可查看。</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px">
             <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:{{ bt.accent }};padding-bottom:8px;border-bottom:.5px solid color-mix(in srgb, {{ bt.line }} 40%, transparent)">ARCHIVE</span>
@@ -1456,7 +1485,6 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
     </div>
     <div style="max-width:1180px;margin:0 auto;padding:16px clamp(18px,4vw,40px) 28px;border-top:1px dashed #D9D0BC;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px">
       <span>© 2026 WRITEopia</span>
-      <span>付費教材由 Portaly 處理付款與寄送</span>
     </div>
   </footer>
 </div>
@@ -1501,6 +1529,7 @@ const MATERIALS = [
   { id: 'p2', type: 'wt2', price: 200, title: '雅思寫作 7+ Task 2 核心句型', coverTitle: 'Task 2 Core Patterns', meta: 'TASK 2 · BAND 7+', desc: '', preview: '#', guide: '#', buy: 'https://portaly.cc/WRITEopia/product/dBYxDZrfDwXaCox5TOlw' }
 ];
 const MAT_FILTERS = [['all', '全部'], ['speaking', '口說'], ['wt1', '寫作 Task 1'], ['wt2', '寫作 Task 2'], ['reading', '閱讀']];
+const MAT_SPINES = { speaking: '#C95440', wt1: '#42685D', wt2: '#B39556', reading: '#8C7FA3' };
 const MAT_COVERS = { speaking: '#F3E1D8', wt1: '#DCE6DF', wt2: '#EDE5D2', reading: '#E6E1EC' };
 const EXERCISES = [
   { href: 'exercises/irregular-verbs.html', meta: 'EXERCISE 01 · GRAMMAR', title: 'Irregular Verbs', zh: '不規則動詞訓練室', desc: '129 個不規則動詞，從三態拼寫到時態應用，陪你一步步練熟。', modes: ['三態表＋發音', '拼字測驗', '時態判斷', '自主選字', '錯題重練'], rows: [['go', 'went', 'gone'], ['write', 'wrote', 'written'], ['think', 'thought', 'thought']] }
@@ -1685,19 +1714,22 @@ class Component extends DCLogic {
         toggle: () => this.setState(st => ({ prep: st.prep.includes(i) ? st.prep.filter(x => x !== i) : [...st.prep, i] })) };
     });
     const mf = s.matFilter || 'all';
-    const materials = MATERIALS.filter(m => mf === 'all' || m.type === mf).map(m => {
+    const mq = (s.matQuery || '').trim().toLowerCase();
+    const mTypeLabel = Object.fromEntries(MAT_FILTERS);
+    const mHit = m => !mq || mq.split(/\s+/).every(w => [m.title, m.coverTitle, m.meta, m.desc, mTypeLabel[m.type], ...(m.files || []).map(f => f[0])].join(' ').toLowerCase().includes(w));
+    const materials = MATERIALS.filter(m => (mf === 'all' || m.type === mf) && mHit(m)).map(m => {
       const free = !m.price && !m.buy;
-      return { ...m, isFree: free, isPaid: !free, isNew: !!m.isNew, cover: MAT_COVERS[m.type], tag: free ? 'FREE' : 'PAID', tagBg: free ? '#42685D' : '#C95440', tagColor: '#FFF9EE',
+      return { ...m, isFree: free, isPaid: !free, isNew: !!m.isNew, cover: MAT_COVERS[m.type], spine: MAT_SPINES[m.type] || '#42685D', typeLabel: mTypeLabel[m.type] || '', tagInk: free ? '#42685D' : '#C95440', tag: free ? 'FREE' : 'PAID', tagBg: free ? '#42685D' : '#C95440', tagColor: '#FFF9EE',
         priceLabel: free || m.price == null ? '' : 'NT$ ' + m.price, fileList: (m.files || []).map(([label, href]) => ({ label, href })) };
     });
-    const matFilters = MAT_FILTERS.map(([k, label]) => { const on = mf === k; return { label, go: () => this.setState({ matFilter: k }), count: String(MATERIALS.filter(m => k === 'all' || m.type === k).length).padStart(2, '0'), color: on ? '#C95440' : '#42685D', line: on ? '#C95440' : '#90AFA0', bg: on ? '#FFF9EE' : 'transparent', weight: on ? 700 : 500 }; });
+    const matFilters = MAT_FILTERS.map(([k, label]) => { const on = mf === k; const tint = MAT_COVERS[k] || '#ECE5D6', solid = MAT_SPINES[k] || '#2E2B24'; return { label, pressed: on ? 'true' : 'false', go: () => this.setState({ matFilter: k }), count: String(MATERIALS.filter(m => (k === 'all' || m.type === k) && mHit(m)).length).padStart(2, '0'), bg: on ? solid : tint, color: on ? '#FFF9EE' : '#2E2B24', countColor: on ? 'rgba(255,249,238,.8)' : '#6B6658', shadow: on ? 'inset 0 2px 5px rgba(0,0,0,.32), inset 0 -1px 0 rgba(255,255,255,.12)' : '0 2px 0 rgba(46,43,36,.14), 0 4px 10px -4px rgba(46,43,36,.3)', shift: on ? 'translateY(1px)' : 'none' }; });
     return {
       textureOpacity: (this.props.paperTexture ?? true) ? 0.5 : 0,
       isHome: s.page === 'home', visToday: s.visToday ?? '—', visTotal: s.visTotal ?? '—', isCourses: s.page === 'courses', isMaterials: s.page === 'materials', isBooking: s.page === 'booking', isFaq: s.page === 'faq', isAbout: s.page === 'about', ...this.blogVals(), ...this.bookingVals(),
       navItems: nav.map(([k, label]) => ({ label, go: () => this.go(k), color: s.page === k ? '#C95440' : '#42685D', line: s.page === k ? '#C95440' : 'transparent', dot: s.page === k ? '#C95440' : 'transparent' })),
       homeNav: { color: ['home', 'about'].includes(s.page) ? '#C95440' : '#42685D', line: ['home', 'about'].includes(s.page) ? '#C95440' : 'transparent', dot: ['home', 'about'].includes(s.page) ? '#C95440' : 'transparent' },
       homeMenuShow: !!s.homeMenu, homeMenuExpanded: s.homeMenu ? 'true' : 'false',
-      homeMenuOpen: () => this.setState({ homeMenu: true }), homeMenuClose: () => this.setState({ homeMenu: false }), homeMenuToggle: () => this.setState(st => ({ homeMenu: !st.homeMenu })),
+      homeMenuOpen: () => this.setState({ homeMenu: true }), homeMenuClose: () => this.setState({ homeMenu: false }), homeMenuToggle: () => { this.setState({ homeMenu: false }); this.go('home'); },
       homeSub: [['home', 'Homepage'], ['about', 'About Us']].map(([k, label]) => ({ label, color: s.page === k ? '#C95440' : '#42685D', go: () => { this.setState({ homeMenu: false }); this.go(k); } })),
       courseNav: { color: s.page === 'courses' ? '#C95440' : '#42685D', line: s.page === 'courses' ? '#C95440' : 'transparent', dot: s.page === 'courses' ? '#C95440' : 'transparent' },
       courseMenuShow: !!s.courseMenu, courseMenuExpanded: s.courseMenu ? 'true' : 'false',
@@ -1709,6 +1741,13 @@ class Component extends DCLogic {
       matSub: [['sec-free', 'Free Resources'], ['sec-paid', 'Paid Resources'], ['sec-practice', 'Interactive Practice'], ['sec-shared', 'Shared Resources']].map(([id, label]) => ({ label, color: '#42685D', go: () => { this.setState({ matMenu: false }); this.go('materials'); setTimeout(() => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }, 120); } })),
       goHome: () => this.go('home'), goCourses: () => this.go('courses'), goMaterials: () => this.go('materials'),
       goTestimonials: () => { const el = document.getElementById('testimonials'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); },
+      navWide: window.innerWidth >= 640, navNarrow: window.innerWidth < 640,
+      mNav: (() => { const on = k => s.page === k; const open = !!s.mNavOpen; const mk = ([k, label]) => ({ label, color: on(k) ? '#C95440' : '#42685D', dot: on(k) ? '#C95440' : 'transparent', go: () => { this.setState({ mNavOpen: false }); this.go(k); } });
+        return { open, expanded: open ? 'true' : 'false', line: open ? '#C95440' : '#90AFA0', bg: open ? '#FFF9EE' : 'transparent', ink: open ? '#C95440' : '#42685D', icon: open ? 'M18 6 6 18M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16',
+          toggle: () => this.setState(st => ({ mNavOpen: !st.mNavOpen })), close: () => this.setState({ mNavOpen: false }),
+          booking: { ...mk(['booking', 'Booking']), line: on('booking') ? '#C95440' : 'transparent' },
+          items: [['about', 'About Us'], ['courses', 'Courses'], ['materials', 'Materials'], ['blog', 'Writing Lab'], ['faq', 'FAQ']].map(mk) }; })(),
+      keyTagline: (() => { if (!this._rz) { this._rz = () => this.forceUpdate(); window.addEventListener('resize', this._rz); } return window.innerWidth >= 640; })(),
       keyDots: KEYS.map((ch, i) => ({ ch, bg: i < 5 ? '#C95440' : (i % 2 ? '#90AFA0' : '#C95440') })),
       creds: [
         { code: 'IELTS 8', name: '雅思檢定 IELTS 8', extra: '' },
@@ -1716,7 +1755,7 @@ class Component extends DCLogic {
         { code: 'TKT', name: '劍橋 Teaching Knowledge Test', extra: ' — 三項模組皆為 Band 4' }
       ],
       bookingUrl: 'https://calendar.app.google/ZCGwNjovyNb8pV7XA',
-      bookSteps: [['選擇時段', '在預約頁挑選有開放的試課時間。'], ['填寫學習需求', '留下姓名、Email，並寫下你想加強的部分。'], ['收到確認', '確認信與上課連結會寄到你的信箱。']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
+      bookSteps: [['選擇時段', '在預約頁挑選有開放的試課時間。'], ['填寫學習需求', '留下姓名、Email，並寫下你想加強的部分。'], ['繳費與確認', '老師聯繫繳費，完成後確認信與上課連結會寄到你的信箱。']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
       lineHref: 'https://lin.ee/pqp4nnK',
       socials: [
         { label: 'Instagram', handle: '@writeopia_tw', note: '學習小卡・貼文', mark: 'IG', bg: '#C95440', href: 'https://www.instagram.com/writeopia_tw/' },
@@ -1724,7 +1763,7 @@ class Component extends DCLogic {
         { label: 'YouTube', handle: '@WRITEopia', note: '免費教學影片', mark: 'YT', bg: '#C95440', href: 'https://www.youtube.com/@WRITEopia' }
       ],
       ...this.testimonialVals(),
-      courseGroups, showAdultMaterial: this.props.showAdultMaterial ?? false, closeCourse: () => this.setState({ openCourse: null }), prepList, prepDone: s.prep.length, prepTotal: PREP.length, prepComplete: s.prep.length === PREP.length,
+      courseGroups, showAdultMaterial: this.props.showAdultMaterial ?? false, closeCourse: () => this.setState({ openCourse: null }), closeCourseBottom: e => { const el = e.currentTarget.closest('[id$="-intro"]'); const y = el ? Math.max(0, el.getBoundingClientRect().top + window.scrollY - 260) : null; this.setState({ openCourse: null }, () => { if (y != null) window.scrollTo({ top: y, behavior: 'smooth' }); }); }, prepList, prepDone: s.prep.length, prepTotal: PREP.length, prepComplete: s.prep.length === PREP.length,
       filters: [['all', 'ALL'], ['free', 'FREE'], ['paid', 'PAID']].map(([k, label]) => ({ label, pick: () => this.setState({ filter: k }), bg: s.filter === k ? '#42685D' : '#FFF9EE', color: s.filter === k ? '#FFF9EE' : '#42685D' })),
       brandLetters: 'IELTS in WRITEopia'.split('').map((ch, i) => {
         const jit = [[1, -5], [-2, 3], [2, -2], [-1, 4], [1, -3], [0, 0], [0, 0], [0, 0], [0, 0], [2, -6], [-2, 4], [1, -3], [-1, 5], [2, -4]];
@@ -1733,9 +1772,10 @@ class Component extends DCLogic {
         return { color: i >= 9 && i <= 13 ? '#C95440' : '#42685D', ch: ch === ' ' ? '\u00A0' : ch, w: ch === ' ' ? '.32em' : '0', size: cap ? '1em' : '.8em', y: jit[k][0] + 'px', r: jit[k][1] + 'deg' };
       }),
       matFilters,
+      matSearch: { q: s.matQuery || '', active: !!mq, open: !!(s.matSearchOpen || mq), expanded: (s.matSearchOpen || mq) ? 'true' : 'false', btnBg: (s.matSearchOpen || mq) ? '#FFF9EE' : 'transparent', iconColor: (s.matSearchOpen || mq) ? '#C95440' : '#42685D', ref: this.matInputRef || (this.matInputRef = React.createRef()), toggle: () => { const o = !(s.matSearchOpen || mq); this.setState({ matSearchOpen: o, matQuery: o ? s.matQuery : '' }, () => { if (o && this.matInputRef.current) this.matInputRef.current.focus(); }); }, line: mq ? '#C95440' : '#90AFA0', label: '「' + (s.matQuery || '').trim() + '」共 ' + materials.length + ' 份教材', onInput: e => this.setState({ matQuery: e.target.value }), clear: () => this.setState({ matQuery: '' }) },
       materialGroups: [
-        { id: 'sec-free', title: 'Free Resources', label: 'DOWNLOAD FOR FREE', items: materials.filter(m => m.isFree), has: materials.some(m => m.isFree), empty: materials.every(m => !m.isFree) },
-        { id: 'sec-paid', title: 'Paid Resources', label: 'ADD TO CART', items: materials.filter(m => m.isPaid), has: materials.some(m => m.isPaid), empty: materials.every(m => !m.isPaid) }
+        { id: 'sec-free', title: 'Free Resources', label: 'DOWNLOAD FOR FREE', items: materials.filter(m => m.isFree), has: materials.some(m => m.isFree), empty: materials.every(m => !m.isFree), emptyText: mq ? '沒有符合的免費教材，換個關鍵字試試。' : '這個類別目前沒有教材。' },
+        { id: 'sec-paid', title: 'Paid Resources', label: 'ADD TO CART', items: materials.filter(m => m.isPaid), has: materials.some(m => m.isPaid), empty: materials.every(m => !m.isPaid), emptyText: mq ? '沒有符合的付費教材，換個關鍵字試試。' : '這個類別目前沒有教材。' }
       ],
       courseToc: toc([['sec-general', 'General English'], ['sec-ielts', 'IELTS Preparation'], ['sec-custom', 'Customised Lessons'], ['sec-before', 'Before Class']]),
       materialToc: toc([['sec-free', 'Free Resources'], ['sec-paid', 'Paid Resources'], ['sec-practice', 'Interactive Practice'], ['sec-shared', 'Shared Resources']]),
