@@ -111,8 +111,8 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         </sc-for>
         </sc-if>
         <sc-if value="{{ navNarrow }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ mNav.booking.go }}" style="background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:{{ mNav.booking.color }};border-bottom:1.5px solid {{ mNav.booking.line }}" style-hover="color:#C95440">
-            <span style="width:7px;height:7px;border-radius:50%;background:{{ mNav.booking.dot }}"></span>Booking
+          <button onClick="{{ mNav.pinned.go }}" style="background:none;border:0;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:{{ mNav.pinned.color }};border-bottom:1.5px solid {{ mNav.pinned.line }}" style-hover="color:#C95440">
+            <span style="width:7px;height:7px;border-radius:50%;background:{{ mNav.pinned.dot }}"></span>Materials
           </button>
           <div style="position:relative">
             <button onClick="{{ mNav.toggle }}" aria-label="選單" aria-haspopup="true" aria-expanded="{{ mNav.expanded }}" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px dashed {{ mNav.line }};border-radius:3px;background:{{ mNav.bg }};color:{{ mNav.ink }};cursor:pointer">
@@ -1020,7 +1020,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         <div style="padding:clamp(26px,4vw,44px);display:flex;flex-direction:column;gap:18px;justify-content:center">
           <span style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.16em;color:#C95440">THIS MONTH'S SLOTS</span>
           <h2 style="margin:0;font-family:'Noto Sans TC',sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,28px);line-height:1.4;color:#42685D">查看目前開放時段，直接線上預約</h2>
-          <p style="margin:0;font-size:16px;line-height:1.8;text-wrap:pretty">點下方按鈕會開啟預約頁，選好時間並簡單填寫你的學習需求。送出預約後，老師會聯繫你繳費；完成繳費即會收到確認信與上課連結。</p>
+          <p style="margin:0;font-size:16px;line-height:1.8;text-wrap:pretty">點下方按鈕會開啟預約頁，選好時間並簡單填寫你的學習需求。送出預約後，老師會聯繫你繳交試課費用；完成繳費後，才算正式預約成功哦！</p>
           <a href="{{ bookingUrl }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:10px;background:#C95440;color:#FFF9EE;text-decoration:none;border-radius:3px;padding:15px 24px;min-height:52px;font-size:16px;font-weight:700;transition:transform .2s,background .2s" style-hover="background:#B4462F;color:#FFF9EE;transform:translateY(-2px)">選擇試課時段 ↗</a>
         </div>
         <ol style="margin:0;padding:clamp(26px,4vw,44px);list-style:none;display:flex;flex-direction:column;background:#DCE6DF">
@@ -1746,8 +1746,8 @@ class Component extends DCLogic {
       mNav: (() => { const on = k => s.page === k; const open = !!s.mNavOpen; const mk = ([k, label]) => ({ label, color: on(k) ? '#C95440' : '#42685D', dot: on(k) ? '#C95440' : 'transparent', go: () => { this.setState({ mNavOpen: false }); this.go(k); } });
         return { open, expanded: open ? 'true' : 'false', line: open ? '#C95440' : '#90AFA0', bg: open ? '#FFF9EE' : 'transparent', ink: open ? '#C95440' : '#42685D', icon: open ? 'M18 6 6 18M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16',
           toggle: () => this.setState(st => ({ mNavOpen: !st.mNavOpen })), close: () => this.setState({ mNavOpen: false }),
-          booking: { ...mk(['booking', 'Booking']), line: on('booking') ? '#C95440' : 'transparent' },
-          items: [['about', 'About Us'], ['courses', 'Courses'], ['materials', 'Materials'], ['blog', 'Writing Lab'], ['faq', 'FAQ']].map(mk) }; })(),
+          pinned: { ...mk(['materials', 'Materials']), line: on('materials') ? '#C95440' : 'transparent' },
+          items: [['about', 'About Us'], ['courses', 'Courses'], ['blog', 'Writing Lab'], ['booking', 'Booking'], ['faq', 'FAQ']].map(mk) }; })(),
       keyTagline: (() => { if (!this._rz) { this._rz = () => this.forceUpdate(); window.addEventListener('resize', this._rz); } return window.innerWidth >= 640; })(),
       keyDots: KEYS.map((ch, i) => ({ ch, bg: i < 5 ? '#C95440' : (i % 2 ? '#90AFA0' : '#C95440') })),
       creds: [
@@ -1756,7 +1756,7 @@ class Component extends DCLogic {
         { code: 'TKT', name: '劍橋 Teaching Knowledge Test', extra: ' — 三項模組皆為 Band 4' }
       ],
       bookingUrl: 'https://calendar.app.google/ZCGwNjovyNb8pV7XA',
-      bookSteps: [['選擇時段', '在預約頁挑選有開放的試課時間。'], ['填寫學習需求', '留下姓名、Email，並寫下你想加強的部分。'], ['繳費與確認', '老師聯繫繳費，完成後確認信與上課連結會寄到你的信箱。']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
+      bookSteps: [['選擇時段', '在預約頁挑選有開放的試課時間。'], ['填寫學習需求', '留下姓名、Email，並寫下你想加強的部分。'], ['繳費完成預約', '老師會聯繫你繳費，完成後即正式預約；上課連結會在課前約 5 分鐘寄到你的信箱。（系統自動寄出的行事曆通知不代表預約完成）']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
       lineHref: 'https://lin.ee/pqp4nnK',
       socials: [
         { label: 'Instagram', handle: '@writeopia_tw', note: '學習小卡・貼文', mark: 'IG', bg: '#C95440', href: 'https://www.instagram.com/writeopia_tw/' },
