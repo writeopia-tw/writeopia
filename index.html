@@ -1560,7 +1560,7 @@ class Component extends DCLogic {
     const base = 'https://writeopia.goatcounter.com/counter/TOTAL.json';
     const day = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' });
     const get = q => fetch(base + q).then(r => r.ok ? r.json() : null).then(j => j && j.count != null ? String(j.count).trim() : null).catch(() => null);
-    Promise.all([get('?start=' + day), get('')]).then(([t, a]) => this.setState({ visToday: t, visTotal: a }));
+    Promise.all([get('?start=' + day), get('?start=2020-01-01')]).then(([t, a]) => this.setState({ visToday: t, visTotal: a }));
   }
   componentDidMount() { this.loadVisitors(); this.loadBlog(); if (this.slugFromHash()) this.setState({ blogSlug: this.slugFromHash() }); if (!window.marked) { this.mdPoll = setInterval(() => { if (window.marked) { clearInterval(this.mdPoll); this.forceUpdate(); } }, 150); } this.rTimer = setInterval(() => { if (!document.hidden) this.setState(st => ({ rIdx: st.rIdx + 1 })); }, 3200); this.tPoll = setInterval(() => { if (window.WO_STORIES) { clearInterval(this.tPoll); this.forceUpdate(); } }, 120); this.onHash = () => { const p = this.readHash(); const bs = this.slugFromHash(); if (bs !== this.state.blogSlug) { this.setState({ blogSlug: bs }); window.scrollTo(0, 0); } const c = location.hash === '#/contact'; if (p && p !== this.state.page) { this.setState({ page: p }); window.scrollTo(0, 0); } if (c) this.toContact(); }; if (location.hash === '#/contact') this.toContact(); window.addEventListener('hashchange', this.onHash); }
   componentWillUnmount() { clearInterval(this.rTimer); clearInterval(this.tPoll); window.removeEventListener('hashchange', this.onHash); }
