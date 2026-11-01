@@ -156,6 +156,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           
           <div style="position:relative;width:min(100%,440px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid #D9D0BC;background:#EFE8D8">
             <img src="assets/logo-home.png" alt="WRITEopia IELTS" style="position:absolute;left:50%;top:51%;width:104%;height:auto;transform:translate(-50%,-50%)">
+            <div onMouseEnter="{{ kb.enter }}" onClick="{{ kb.enter }}" style="position:absolute;left:50%;top:51%;width:104%;aspect-ratio:828/1033;transform:translate(-50%,-50%)">
+              <sc-for list="{{ kb.keys }}" as="k" hint-placeholder-count="0">
+                <span aria-hidden="true" onMouseEnter="{{ k.press }}" style="position:absolute;left:{{ k.wl }};top:{{ k.wt }};width:{{ k.wd }};aspect-ratio:1;border-radius:50%;background:#DDD5C3;box-shadow:inset 0 3px 6px rgba(46,43,36,.4);cursor:pointer"></span>
+                <span aria-hidden="true" style="position:absolute;left:{{ k.cl }};top:{{ k.ct }};width:{{ k.cd }};aspect-ratio:1;border-radius:50%;background-image:url(assets/logo-home.png);background-repeat:no-repeat;background-size:{{ k.bs }};background-position:{{ k.bp }};transform:{{ k.tf }};filter:{{ k.ft }};transition:transform .08s ease-out,filter .08s ease-out;pointer-events:none"></span>
+              </sc-for>
+            </div>
           </div>
           <div style="position:absolute;left:0;bottom:0;background:#FFF9EE;border:1px solid #D9D0BC;padding:10px 14px;transform:rotate(-3deg);font-family:'Special Elite',monospace;font-size:12px;color:#42685D;letter-spacing:.08em">Enjoy Learning ✦ Think Critically</div>
           <div style="position:absolute;right:0;top:0;font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.1em;color:#C95440;border:1.5px solid #C95440;border-radius:50%;width:84px;height:84px;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(10deg);opacity:.85;line-height:1.2">EXPRESS<br>FREELY</div>
@@ -368,9 +374,10 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
               <p style="margin:0;padding:10px 0 4px;font-size:14px;line-height:1.8;color:#403E34;text-wrap:pretty">不論一對一或團班，費用固定，依官網公告。一週至少上課一堂 50 mins，可和老師討論是否需要增加週時數。</p>
             </details>
           </sc-if>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:20px">
+          <div data-course-grid="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:20px">
+          <div style="display:contents">
             <sc-for list="{{ g.items }}" as="c" hint-placeholder-count="4">
-              <article style="background:#FFF9EE;border:1px solid #D9D0BC;border-radius:3px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;transition:transform .2s,border-color .2s" style-hover="transform:translateY(-3px);border-color:#90AFA0">
+              <article style="order:{{ c.order }};background:#FFF9EE;border:1px solid #D9D0BC;border-radius:3px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;transition:transform .2s,border-color .2s" style-hover="transform:translateY(-3px);border-color:#90AFA0">
                 <div style="display:flex;justify-content:space-between;align-items:center">
                   <span style="width:40px;height:40px;border-radius:50%;background:{{ c.dot }};color:#2E2B24;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:15px">{{ c.num }}</span>
                   <span style="font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.14em;color:#42685D">{{ c.en }}</span>
@@ -414,7 +421,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </sc-for>
           </div>
           <sc-if value="{{ g.showPhonics }}" hint-placeholder-val="{{ false }}">
-            <div id="phonics-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:28px;animation:woFade .3s ease both">
+            <div id="phonics-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:28px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">PHONICS FOR CHILDREN &amp; ADULTS</span>
@@ -459,7 +466,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showGrammar }}" hint-placeholder-val="{{ false }}">
-            <div id="grammar-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="grammar-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">FOUNDATIONAL ENGLISH GRAMMAR</span>
@@ -493,7 +500,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showPron }}" hint-placeholder-val="{{ false }}">
-            <div id="pron-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="pron-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ADVANCED ENGLISH PRONUNCIATION</span>
@@ -523,7 +530,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showEveryday }}" hint-placeholder-val="{{ false }}">
-            <div id="everyday-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="everyday-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">EVERYDAY ENGLISH</span>
@@ -546,7 +553,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showWriting1 }}" hint-placeholder-val="{{ false }}">
-            <div id="writing1-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="writing1-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">FOUNDATIONAL ACADEMIC WRITING</span>
@@ -584,7 +591,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showWriting2 }}" hint-placeholder-val="{{ false }}">
-            <div id="writing2-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="writing2-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ACADEMIC ESSAY WRITING</span>
@@ -618,7 +625,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showReading }}" hint-placeholder-val="{{ false }}">
-            <div id="reading-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="reading-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">ENGLISH READING LITERACY</span>
@@ -646,7 +653,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsGrammar }}" hint-placeholder-val="{{ false }}">
-            <div id="ielts-grammar-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="ielts-grammar-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS GRAMMAR</span>
@@ -681,7 +688,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsLR }}" hint-placeholder-val="{{ false }}">
-            <div id="ielts-lr-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="ielts-lr-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS LISTENING &amp; READING</span>
@@ -728,7 +735,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsSpeaking }}" hint-placeholder-val="{{ false }}">
-            <div id="ielts-speaking-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="ielts-speaking-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS SPEAKING</span>
@@ -759,7 +766,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             </div>
           </sc-if>
           <sc-if value="{{ g.showIeltsWriting }}" hint-placeholder-val="{{ false }}">
-            <div id="ielts-writing-intro" style="background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
+            <div id="ielts-writing-intro" style="order:{{ g.panelOrder }};grid-column:1/-1;background:#FFF9EE;border:1.5px solid #42685D;border-radius:3px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px;animation:woFade .3s ease both">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
                 <div style="display:flex;flex-direction:column;gap:8px">
                   <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.16em;color:#C95440">IELTS WRITING</span>
@@ -789,6 +796,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
               <div style="display:flex;justify-content:flex-end;border-top:1px dashed #C9BFA8;padding-top:16px;margin-top:-4px"><button onClick="{{ closeCourseBottom }}" style="min-height:40px;padding:6px 14px;border:1px solid #42685D;background:#F6F1E5;color:#42685D;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:color .2s,border-color .2s" style-hover="color:#C95440;border-color:#C95440">收合 ↑</button></div>
             </div>
           </sc-if>
+          </div>
         </section>
       </sc-for>
 
@@ -1533,6 +1541,11 @@ const MATERIALS = [
   { id: 'p2', type: 'wt2', price: 200, title: '雅思寫作 7+ Task 2 核心句型', coverTitle: 'Task 2 Core Patterns', meta: 'TASK 2 · BAND 7+', desc: '', preview: '#', guide: '#', buy: 'https://portaly.cc/WRITEopia/product/dBYxDZrfDwXaCox5TOlw' }
 ];
 const MAT_FILTERS = [['all', '全部'], ['speaking', '口說'], ['wt1', '寫作 Task 1'], ['wt2', '寫作 Task 2'], ['reading', '閱讀']];
+const KB_KEYS = [[86,454],[143,452],[201,453],[260,452],[318,453],[376,453],[435,453],[493,452],[552,454],[609,453],[668,455],[729,455],
+  [113,508],[172,507],[231,508],[289,507],[348,507],[406,507],[466,507],[524,508],[583,509],[643,507],[703,510],
+  [143,564],[202,564],[261,562],[318,563],[377,563],[436,563],[495,563],[554,562],[614,563],[675,564],
+  [172,615],[232,615],[290,615],[348,615],[406,616],[465,616],[524,616],[583,614],[645,616]];
+const KB_SEQ = [13, 15, 19, 16, 14, 20, 21, 19, 24];
 const MAT_SPINES = { speaking: '#C95440', wt1: '#42685D', wt2: '#B39556', reading: '#8C7FA3' };
 const MAT_COVERS = { speaking: '#F3E1D8', wt1: '#DCE6DF', wt2: '#EDE5D2', reading: '#E6E1EC' };
 const EXERCISES = [
@@ -1549,7 +1562,48 @@ const SHARED = [
 ];
 class Component extends DCLogic {
   state = { page: this.readHash() || (this.props.startPage ?? 'home'), prep: [], tFilter: '全部', openCourse: null, rIdx: 0, storyLimit: 6, noteLimit: 18, week: 0, pick: null, requested: [], justBooked: '', fName: '', fContact: '', fCourse: 'IELTS 口說', fNeeds: '', fLevel: '不確定' };
-  closeCourseBack() { const y = this._courseY; this.setState({ openCourse: null }, () => { if (y != null) requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'smooth' })); }); }
+  measureCols() { const g = document.querySelector('[data-course-grid]'); if (!g) return 0; return getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length; }
+  closeCourseBack() { const y = window.__woCourseY; this.setState({ openCourse: null }); if (y != null) setTimeout(() => window.scrollTo({ top: y, behavior: 'smooth' }), 60); }
+  kbUnlock() {
+    if (this._kbInit) return; this._kbInit = true;
+    const un = () => { try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') this._ac.resume(); } catch (e) {} };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, un, { capture: true, passive: true }));
+  }
+  kbClick() {
+    const ctx = this._ac; if (!ctx || ctx.state !== 'running') return;
+    const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * 0.045), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1700 + Math.random() * 1400; bp.Q.value = 1.2;
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    src.connect(bp).connect(g).connect(ctx.destination); src.start(t);
+    const o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.04);
+    og.gain.setValueAtTime(0.18, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.05); o.connect(og).connect(ctx.destination); o.start(t); o.stop(t + 0.06);
+  }
+  kbPress(i) {
+    this.kbClick();
+    this.setState(st => ({ kbDown: { ...(st.kbDown || {}), [i]: true } }));
+    clearTimeout((this._kbT || (this._kbT = {}))[i]);
+    this._kbT[i] = setTimeout(() => this.setState(st => ({ kbDown: { ...(st.kbDown || {}), [i]: false } })), 130);
+  }
+  kbVals() {
+    this.kbUnlock();
+    const W = 828, H = 1033, WD = 46, CD = 56, down = this.state.kbDown || {};
+    const pct = v => (v * 100).toFixed(3) + '%';
+    return {
+      enter: () => {
+        if (this._kbTyping) return; this._kbTyping = true;
+        let t = 0; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; setTimeout(() => this.kbPress(k), t); });
+        setTimeout(() => { this._kbTyping = false; }, t + 600);
+      },
+      keys: KB_KEYS.map(([cx, cy], i) => {
+        const x0 = cx - CD / 2, y0 = cy - 4 - CD / 2, on = !!down[i];
+        return { wl: pct((cx - WD / 2) / W), wt: pct((cy - WD / 2) / H), wd: pct(WD / W), cl: pct(x0 / W), ct: pct(y0 / H), cd: pct(CD / W),
+          bs: (W / CD * 100).toFixed(2) + '% auto', bp: pct(x0 / (W - CD)) + ' ' + pct(y0 / (H - CD)),
+          tf: on ? 'translateY(3px) scale(.95)' : 'none', ft: on ? 'brightness(.88)' : 'none', press: () => this.kbPress(i) };
+      })
+    };
+  }
   readHash() { const p = (location.hash || '').replace(/^#\/?/, '').split('/')[0]; if (p === 'contact') return 'home'; return ['home', 'about', 'courses', 'materials', 'blog', 'booking', 'faq'].includes(p) ? p : null; }
   slugFromHash() { const m = (location.hash || '').match(/^#\/?blog\/([^/?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
   loadBlog() { fetch('blog/posts.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : { posts: [] }).then(j => this.setState({ blog: (j.posts || []).filter(p => p && !p.draft && p.title).sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))) })).catch(() => this.setState({ blog: [] })); }
@@ -1560,7 +1614,8 @@ class Component extends DCLogic {
     const base = 'https://writeopia.goatcounter.com/counter/TOTAL.json';
     const day = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' });
     const get = q => fetch(base + q).then(r => r.ok ? r.json() : null).then(j => j && j.count != null ? String(j.count).trim() : null).catch(() => null);
-    Promise.all([get('?start=' + day), get('?start=2020-01-01')]).then(([t, a]) => this.setState({ visToday: t, visTotal: a }));
+    const n = v => { const x = parseInt(String(v || '').replace(/[^0-9]/g, ''), 10); return isNaN(x) ? null : x; };
+    Promise.all([get('?start=' + day), get(''), get('?start=2020-01-01')]).then(([t, a, b]) => { const nt = n(t), all = [n(a), n(b), nt].filter(v => v != null); this.setState({ visToday: nt == null ? null : String(nt), visTotal: all.length ? String(Math.max(...all)) : null }); });
   }
   componentDidMount() { this.loadVisitors(); this.loadBlog(); if (this.slugFromHash()) this.setState({ blogSlug: this.slugFromHash() }); if (!window.marked) { this.mdPoll = setInterval(() => { if (window.marked) { clearInterval(this.mdPoll); this.forceUpdate(); } }, 150); } this.rTimer = setInterval(() => { if (!document.hidden) this.setState(st => ({ rIdx: st.rIdx + 1 })); }, 3200); this.tPoll = setInterval(() => { if (window.WO_STORIES) { clearInterval(this.tPoll); this.forceUpdate(); } }, 120); this.onHash = () => { const p = this.readHash(); const bs = this.slugFromHash(); if (bs !== this.state.blogSlug) { this.setState({ blogSlug: bs }); window.scrollTo(0, 0); } const c = location.hash === '#/contact'; if (p && p !== this.state.page) { this.setState({ page: p }); window.scrollTo(0, 0); } if (c) this.toContact(); }; if (location.hash === '#/contact') this.toContact(); window.addEventListener('hashchange', this.onHash); }
   componentWillUnmount() { clearInterval(this.rTimer); clearInterval(this.tPoll); window.removeEventListener('hashchange', this.onHash); }
@@ -1709,9 +1764,10 @@ class Component extends DCLogic {
     const nav = [['courses', 'Courses'], ['materials', 'Materials'], ['blog', 'Writing Lab'], ['booking', 'Booking'], ['faq', 'FAQ']];
     const jump = id => () => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); };
     const toc = arr => arr.map(([id, label], i) => ({ label, num: String(i + 1).padStart(2, '0'), go: jump(id) }));
+    if (!this._crz) { this._crz = () => { const c = this.measureCols(); if (c && c !== this.state.courseCols) this.setState({ courseCols: c }); }; window.addEventListener('resize', this._crz); }
     const courseGroups = COURSES.map((g, gi) => ({
-      id: gi === 0 ? 'sec-general' : 'sec-ielts', title: g.title, label: g.label, showPhonics: gi === 0 && s.openCourse === '自然發音', showGrammar: gi === 0 && s.openCourse === '文法', showPron: gi === 0 && s.openCourse === '進階發音', showEveryday: gi === 0 && s.openCourse === '生活英文', showWriting1: gi === 0 && s.openCourse === '寫作 1', showWriting2: gi === 0 && s.openCourse === '寫作 2', showReading: gi === 0 && s.openCourse === '閱讀素養', showIeltsGrammar: gi === 1 && s.openCourse === '雅思文法', showIeltsLR: gi === 1 && s.openCourse === '雅思聽讀', showIeltsSpeaking: gi === 1 && s.openCourse === '雅思口說', showIeltsWriting: gi === 1 && s.openCourse === '雅思寫作', showFee: gi === 0, showIeltsFee: gi === 1,
-      items: g.items.map(([name, en, desc, details, prices], i) => ({ name, en, desc, prices: (prices || []).map(([plan, one, grp]) => ({ plan, hasPlan: !!plan, one, grp })), hasPrices: !!prices && !PANELS[name], num: String(i + 1).padStart(2, '0'), details: details || [], noDetail: !details && !PANELS[name], panelNote: !!PANELS[name], open: s.openCourse === name, arrow: s.openCourse === name ? 'rotate(180deg)' : 'none', toggle: () => { const opening = s.openCourse !== name; if (opening) this._courseY = window.scrollY; this.setState({ openCourse: opening ? name : null }); if (opening && PANELS[name]) setTimeout(() => { const el = document.getElementById(PANELS[name]); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }, 60); }, dot: gi === 0 ? (i % 3 === 1 ? '#90AFA0' : '#C95440') : (i % 2 ? '#C95440' : '#90AFA0') }))
+      id: gi === 0 ? 'sec-general' : 'sec-ielts', title: g.title, label: g.label, showPhonics: gi === 0 && s.openCourse === '自然發音', showGrammar: gi === 0 && s.openCourse === '文法', showPron: gi === 0 && s.openCourse === '進階發音', showEveryday: gi === 0 && s.openCourse === '生活英文', showWriting1: gi === 0 && s.openCourse === '寫作 1', showWriting2: gi === 0 && s.openCourse === '寫作 2', showReading: gi === 0 && s.openCourse === '閱讀素養', showIeltsGrammar: gi === 1 && s.openCourse === '雅思文法', showIeltsLR: gi === 1 && s.openCourse === '雅思聽讀', showIeltsSpeaking: gi === 1 && s.openCourse === '雅思口說', showIeltsWriting: gi === 1 && s.openCourse === '雅思寫作', showFee: gi === 0, showIeltsFee: gi === 1, panelOrder: (() => { const idx = Math.max(0, g.items.findIndex(it => it[0] === s.openCourse)), cols = s.courseCols || 1; return (Math.floor(idx / cols) * cols + cols - 1) * 2 + 1; })(),
+      items: g.items.map(([name, en, desc, details, prices], i) => ({ order: i * 2, name, en, desc, prices: (prices || []).map(([plan, one, grp]) => ({ plan, hasPlan: !!plan, one, grp })), hasPrices: !!prices && !PANELS[name], num: String(i + 1).padStart(2, '0'), details: details || [], noDetail: !details && !PANELS[name], panelNote: !!PANELS[name], open: s.openCourse === name, arrow: s.openCourse === name ? 'rotate(180deg)' : 'none', toggle: () => { const opening = s.openCourse !== name; if (opening) window.__woCourseY = window.scrollY; this.setState({ openCourse: opening ? name : null, courseCols: this.measureCols() || s.courseCols }); if (opening && PANELS[name]) setTimeout(() => { const el = document.getElementById(PANELS[name]); if (!el) return; const top = el.getBoundingClientRect().top; if (top > window.innerHeight * 0.7 || top < 80) window.scrollTo({ top: top + window.scrollY - 140, behavior: 'smooth' }); }, 60); }, dot: gi === 0 ? (i % 3 === 1 ? '#90AFA0' : '#C95440') : (i % 2 ? '#C95440' : '#90AFA0') }))
     }));
     const prepList = PREP.map(([title, note], i) => {
       const on = s.prep.includes(i);
@@ -1752,6 +1808,7 @@ class Component extends DCLogic {
           toggle: () => this.setState(st => ({ mNavOpen: !st.mNavOpen })), close: () => this.setState({ mNavOpen: false }),
           pinned: { ...mk(['materials', 'Materials']), line: on('materials') ? '#C95440' : 'transparent' },
           items: [['about', 'About Us'], ['courses', 'Courses'], ['blog', 'Writing Lab'], ['booking', 'Booking'], ['faq', 'FAQ']].map(mk) }; })(),
+      kb: this.kbVals(),
       keyTagline: (() => { if (!this._rz) { this._rz = () => this.forceUpdate(); window.addEventListener('resize', this._rz); } return window.innerWidth >= 640; })(),
       keyDots: KEYS.map((ch, i) => ({ ch, bg: i < 5 ? '#C95440' : (i % 2 ? '#90AFA0' : '#C95440') })),
       creds: [
