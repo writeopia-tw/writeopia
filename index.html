@@ -158,7 +158,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             <img src="assets/logo-home.png" alt="WRITEopia IELTS" style="position:absolute;left:50%;top:51%;width:104%;height:auto;transform:translate(-50%,-50%)">
             <div onMouseEnter="{{ kb.enter }}" onClick="{{ kb.enter }}" style="position:absolute;left:50%;top:51%;width:104%;aspect-ratio:828/1033;transform:translate(-50%,-50%)">
               <sc-for list="{{ kb.keys }}" as="k" hint-placeholder-count="0">
-                <span aria-hidden="true" onMouseEnter="{{ k.press }}" style="position:absolute;left:{{ k.wl }};top:{{ k.wt }};width:{{ k.wd }};aspect-ratio:1;border-radius:50%;background:#DDD5C3;box-shadow:inset 0 3px 6px rgba(46,43,36,.4);cursor:pointer"></span>
+                <span aria-hidden="true" onClick="{{ k.press }}" style="position:absolute;left:{{ k.wl }};top:{{ k.wt }};width:{{ k.wd }};aspect-ratio:1;border-radius:50%;background:#DDD5C3;box-shadow:inset 0 3px 6px rgba(46,43,36,.4);cursor:pointer"></span>
                 <span aria-hidden="true" style="position:absolute;left:{{ k.cl }};top:{{ k.ct }};width:{{ k.cd }};aspect-ratio:1;border-radius:50%;background-image:url(assets/logo-home.png);background-repeat:no-repeat;background-size:{{ k.bs }};background-position:{{ k.bp }};transform:{{ k.tf }};filter:{{ k.ft }};transition:transform .08s ease-out,filter .08s ease-out;pointer-events:none"></span>
               </sc-for>
             </div>
@@ -1592,9 +1592,8 @@ class Component extends DCLogic {
     const pct = v => (v * 100).toFixed(3) + '%';
     return {
       enter: () => {
-        if (this._kbTyping) return; this._kbTyping = true;
+        if (this._kbPlayed) return; this._kbPlayed = true;
         let t = 0; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; setTimeout(() => this.kbPress(k), t); });
-        setTimeout(() => { this._kbTyping = false; }, t + 600);
       },
       keys: KB_KEYS.map(([cx, cy], i) => {
         const x0 = cx - CD / 2, y0 = cy - 4 - CD / 2, on = !!down[i];
