@@ -156,7 +156,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           
           <div style="position:relative;width:min(100%,440px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid #D9D0BC;background:#EFE8D8">
             <img src="assets/logo-home.png" alt="WRITEopia IELTS" style="position:absolute;left:50%;top:51%;width:104%;height:auto;transform:translate(-50%,-50%)">
-            <div onMouseEnter="{{ kb.enter }}" onClick="{{ kb.enter }}" style="position:absolute;left:50%;top:51%;width:104%;aspect-ratio:828/1033;transform:translate(-50%,-50%)">
+            <div style="position:absolute;left:50%;top:51%;width:104%;aspect-ratio:828/1033;transform:translate(-50%,-50%)">
               <sc-for list="{{ kb.keys }}" as="k" hint-placeholder-count="0">
                 <span aria-hidden="true" onClick="{{ k.press }}" style="position:absolute;left:{{ k.wl }};top:{{ k.wt }};width:{{ k.wd }};aspect-ratio:1;border-radius:50%;background:#DDD5C3;box-shadow:inset 0 3px 6px rgba(46,43,36,.4);cursor:pointer"></span>
                 <span aria-hidden="true" style="position:absolute;left:{{ k.cl }};top:{{ k.ct }};width:{{ k.cd }};aspect-ratio:1;border-radius:50%;background-image:url(assets/logo-home.png);background-repeat:no-repeat;background-size:{{ k.bs }};background-position:{{ k.bp }};transform:{{ k.tf }};filter:{{ k.ft }};transition:transform .08s ease-out,filter .08s ease-out;pointer-events:none"></span>
@@ -1566,7 +1566,7 @@ class Component extends DCLogic {
   closeCourseBack() { const y = window.__woCourseY; this.setState({ openCourse: null }); if (y != null) setTimeout(() => window.scrollTo({ top: y, behavior: 'smooth' }), 60); }
   kbUnlock() {
     if (this._kbInit) return; this._kbInit = true;
-    const un = () => { try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') this._ac.resume(); } catch (e) {} };
+    const un = () => { let p = null; try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') p = this._ac.resume(); } catch (e) {} Promise.resolve(p).catch(() => {}).then(() => this.kbPlayOnce()); };
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, un, { capture: true, passive: true }));
   }
   kbClick() {
@@ -1580,6 +1580,10 @@ class Component extends DCLogic {
     const o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.04);
     og.gain.setValueAtTime(0.18, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.05); o.connect(og).connect(ctx.destination); o.start(t); o.stop(t + 0.06);
   }
+  kbPlayOnce() {
+    if (this._kbPlayed || this.state.page !== 'home') return; this._kbPlayed = true;
+    let t = 250; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; setTimeout(() => this.kbPress(k), t); });
+  }
   kbPress(i) {
     this.kbClick();
     this.setState(st => ({ kbDown: { ...(st.kbDown || {}), [i]: true } }));
@@ -1591,10 +1595,6 @@ class Component extends DCLogic {
     const W = 828, H = 1033, WD = 46, CD = 56, down = this.state.kbDown || {};
     const pct = v => (v * 100).toFixed(3) + '%';
     return {
-      enter: () => {
-        if (this._kbPlayed) return; this._kbPlayed = true;
-        let t = 0; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; setTimeout(() => this.kbPress(k), t); });
-      },
       keys: KB_KEYS.map(([cx, cy], i) => {
         const x0 = cx - CD / 2, y0 = cy - 4 - CD / 2, on = !!down[i];
         return { wl: pct((cx - WD / 2) / W), wt: pct((cy - WD / 2) / H), wd: pct(WD / W), cl: pct(x0 / W), ct: pct(y0 / H), cd: pct(CD / W),
