@@ -1566,7 +1566,7 @@ class Component extends DCLogic {
   closeCourseBack() { const y = window.__woCourseY; this.setState({ openCourse: null }); if (y != null) setTimeout(() => window.scrollTo({ top: y, behavior: 'smooth' }), 60); }
   kbUnlock() {
     if (this._kbInit) return; this._kbInit = true;
-    const un = () => { let p = null; try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') p = this._ac.resume(); } catch (e) {} Promise.resolve(p).catch(() => {}).then(() => this.kbPlayOnce()); };
+    const un = () => { let p = null; try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') p = this._ac.resume(); } catch (e) {} Promise.resolve(p).catch(() => {}).then(() => { if (this.state.page === 'home') this.kbPlayOnce(); }); };
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, un, { capture: true, passive: true }));
   }
   kbClick() {
@@ -1582,9 +1582,11 @@ class Component extends DCLogic {
   }
   kbPlayOnce() {
     if (this._kbPlayed || this.state.page !== 'home') return; this._kbPlayed = true;
-    let t = 250; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; setTimeout(() => this.kbPress(k), t); });
+    if (this._kbTimers) this._kbTimers.forEach(clearTimeout); this._kbTimers = [];
+    let t = 250; KB_SEQ.forEach((k, n) => { t += n ? 150 + Math.random() * 90 : 0; this._kbTimers.push(setTimeout(() => { if (this.state.page === 'home') this.kbPress(k); }, t)); });
   }
   kbPress(i) {
+    if (this.state.page !== 'home') return;
     this.kbClick();
     this.setState(st => ({ kbDown: { ...(st.kbDown || {}), [i]: true } }));
     clearTimeout((this._kbT || (this._kbT = {}))[i]);
