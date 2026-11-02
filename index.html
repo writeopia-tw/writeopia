@@ -917,7 +917,9 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:{{ m.cover }};color:#2E2B24">{{ m.typeLabel }}</span>
               <sc-if value="{{ m.isNew }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#C95440;color:#FFF9EE">最新</span></sc-if>
-              <span style="margin-left:auto;font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.14em;color:{{ m.tagInk }}">{{ m.tag }}</span>
+              <span style="margin-left:auto;display:flex;align-items:center;gap:10px;font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.14em;color:{{ m.tagInk }}">
+                <sc-if value="{{ m.isFree }}" hint-placeholder-val="{{ true }}"><span title="已被下載 {{ m.dlCount }} 次" aria-label="已被下載 {{ m.dlCount }} 次" style="display:flex;align-items:center;gap:3px;letter-spacing:.04em;color:#90AFA0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"></path><path d="m6 11 6 6 6-6"></path><path d="M5 20h14"></path></svg>{{ m.dlCount }}</span><span aria-hidden="true" style="width:1px;height:10px;background:#C9BFA8"></span></sc-if>{{ m.tag }}
+              </span>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <h3 style="margin:0;font-size:17px;font-weight:700;color:#2E2B24;line-height:1.5;text-wrap:pretty">{{ m.title }}</h3>
@@ -931,7 +933,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
             <sc-if value="{{ m.isFree }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;border-top:1px dashed #C9BFA8;padding-top:8px">
                 <sc-for list="{{ m.fileList }}" as="fl" hint-placeholder-count="1">
-                  <a href="{{ fl.href }}" target="_blank" rel="noopener" aria-label="免費下載 {{ fl.label }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 6px 6px 8px;margin:0 -6px;border-radius:3px;color:#403E34;text-decoration:none;font-size:14px;transition:background .2s" style-hover="background:#F6F1E5;color:#42685D">
+                  <a href="{{ fl.href }}" onClick="{{ fl.track }}" target="_blank" rel="noopener" aria-label="免費下載 {{ fl.label }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 6px 6px 8px;margin:0 -6px;border-radius:3px;color:#403E34;text-decoration:none;font-size:14px;transition:background .2s" style-hover="background:#F6F1E5;color:#42685D">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#90AFA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
                     <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.label }}</span>
                     <span style="flex:none;width:32px;height:32px;border-radius:50%;background:#42685D;color:#FFF9EE;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"></path><path d="m6 11 6 6 6-6"></path><path d="M5 20h14"></path></svg></span>
@@ -1564,6 +1566,15 @@ class Component extends DCLogic {
   state = { page: this.readHash() || (this.props.startPage ?? 'home'), prep: [], tFilter: '全部', openCourse: null, rIdx: 0, storyLimit: 6, noteLimit: 18, week: 0, pick: null, requested: [], justBooked: '', fName: '', fContact: '', fCourse: 'IELTS 口說', fNeeds: '', fLevel: '不確定' };
   measureCols() { const g = document.querySelector('[data-course-grid]'); if (!g) return 0; return getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length; }
   closeCourseBack() { const y = window.__woCourseY; this.setState({ openCourse: null }); if (y != null) setTimeout(() => window.scrollTo({ top: y, behavior: 'smooth' }), 60); }
+  loadDl() {
+    if (this._dlLoaded) return; this._dlLoaded = true;
+    const n = v => { const x = parseInt(String(v || '').replace(/[^0-9]/g, ''), 10); return isNaN(x) ? 0 : x; };
+    MATERIALS.filter(m => !m.price && !m.buy).forEach(m => {
+      fetch('https://writeopia.goatcounter.com/counter/' + encodeURIComponent('download-' + m.id) + '.json')
+        .then(r => r.ok ? r.json() : { count: 0 }).catch(() => ({ count: 0 }))
+        .then(j => this.setState(st => ({ dl: { ...(st.dl || {}), [m.id]: Math.max(n(j.count), (st.dl || {})[m.id] || 0) } })));
+    });
+  }
   kbUnlock() {
     if (this._kbInit) return; this._kbInit = true;
     const un = () => { let p = null; try { if (!this._ac) this._ac = new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state !== 'running') p = this._ac.resume(); } catch (e) {} Promise.resolve(p).catch(() => {}).then(() => { if (this.state.page === 'home') this.kbPlayOnce(); }); };
@@ -1779,10 +1790,11 @@ class Component extends DCLogic {
     const mq = (s.matQuery || '').trim().toLowerCase();
     const mTypeLabel = Object.fromEntries(MAT_FILTERS);
     const mHit = m => !mq || mq.split(/\s+/).every(w => [m.title, m.coverTitle, m.meta, m.desc, mTypeLabel[m.type], ...(m.files || []).map(f => f[0])].join(' ').toLowerCase().includes(w));
+    this.loadDl();
     const materials = MATERIALS.filter(m => (mf === 'all' || m.type === mf) && mHit(m)).map(m => {
       const free = !m.price && !m.buy;
       return { ...m, hasDesc: !!m.desc, isFree: free, isPaid: !free, isNew: !!m.isNew, cover: MAT_COVERS[m.type], spine: MAT_SPINES[m.type] || '#42685D', typeLabel: mTypeLabel[m.type] || '', tagInk: free ? '#42685D' : '#C95440', tag: free ? 'FREE' : 'PAID', tagBg: free ? '#42685D' : '#C95440', tagColor: '#FFF9EE',
-        priceLabel: free || m.price == null ? '' : 'NT$ ' + m.price, fileList: (m.files || []).map(([label, href]) => ({ label, href })) };
+        priceLabel: free || m.price == null ? '' : 'NT$ ' + m.price, fileList: (m.files || []).map(([label, href]) => ({ label, href, track: () => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'download-' + m.id, title: '下載｜' + m.title, event: true }); } catch (e) {} this.setState(st => ({ dl: { ...(st.dl || {}), [m.id]: ((st.dl || {})[m.id] || 0) + 1 } })); } })), dlCount: String((s.dl || {})[m.id] ?? 0) };
     });
     const matFilters = MAT_FILTERS.map(([k, label]) => { const on = mf === k; const tint = MAT_COVERS[k] || '#ECE5D6', solid = MAT_SPINES[k] || '#2E2B24'; return { label, pressed: on ? 'true' : 'false', go: () => this.setState({ matFilter: k }), count: String(MATERIALS.filter(m => (k === 'all' || m.type === k) && mHit(m)).length).padStart(2, '0'), bg: on ? solid : tint, color: on ? '#FFF9EE' : '#2E2B24', countColor: on ? 'rgba(255,249,238,.8)' : '#6B6658', shadow: on ? 'inset 0 2px 5px rgba(0,0,0,.32), inset 0 -1px 0 rgba(255,255,255,.12)' : '0 2px 0 rgba(46,43,36,.14), 0 4px 10px -4px rgba(46,43,36,.3)', shift: on ? 'translateY(1px)' : 'none' }; });
     return {
