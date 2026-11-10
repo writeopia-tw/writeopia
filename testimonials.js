@@ -5,7 +5,7 @@
 // 成績單：用 score: { head, sub, rows: [['項目','分數', 是否為總分]] } 以清晰文字呈現。
 // 暫不公開：在該筆加上 hidden: true，資料會保留但不顯示在網站上。
 window.WO_RESULTS = [
-  { exam: 'IELTS', score: '6.5', detail: '起點 3.5–4 · 閱讀單科重考 5.5 → 6.5 · CEFR B2' },
+  { exam: 'IELTS', score: '6.5', detail: '聽讀練習起點 3.5–4 · 首考 6 · 閱讀重考後 6.5' },
   { exam: 'TOEIC', score: '955', detail: '首次應考 · 聽力 480 · 閱讀 475' },
   { exam: 'IELTS', score: '7.5', detail: 'L 7.5 · R 9 · W 6.5 · S 6' },
   { exam: 'IELTS', score: '7', detail: 'R 7 · L 7 · W 6.5 · S 7' },
@@ -16,7 +16,7 @@ window.WO_RESULTS = [
 ];
 
 window.WO_STORIES = [
-  { tags: ['IELTS', '寫作'], result: 'IELTS 3.5 → 6.5', title: '從 3.5 到 6.5：九個月的雅思準備', date: '2026/11/8',
+  { tags: ['IELTS', '寫作'], result: 'IELTS Overall 6.5', title: '聽讀從練習 3.5–4 起步：九個月的雅思準備', date: '2026/11/8',
     score: { head: 'IELTS Test Results', sub: '10/15 首考 · 11/7 閱讀單科重考', rows: [['Listening', '6.0'], ['Reading', '5.5 → 6.5'], ['Writing', '6.0'], ['Speaking', '6.5'], ['Overall', '6 → 6.5', true]] },
     paras: [
     '謝謝老師這段時間的教學，我的閱讀跟聽力一開始都只有3.5-4.0，一直到今年九月後才慢慢出現有6-6.5這部分的數據。我認為這部分的教學，像是在帶我了解題目、理解為什麼會選錯的答案，以及給予其他的複習材料，這點幫助很大！',
