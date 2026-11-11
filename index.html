@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WRITEopia｜English &amp; IELTS 線上英文與雅思課程</title>
+<title>WRITEopia 雅思✨寫作方程｜專業英文 &amp; 雅思課程</title>
 <meta name="description" content="WRITEopia 提供線上英文與雅思課程：自然發音、文法、生活英文、英文寫作，以及雅思聽說讀寫備考。另有免費教材、寫作挑戰與試課預約。">
-<link rel="icon" type="image/jpeg" href="assets/logo.jpg">
-<link rel="apple-touch-icon" href="assets/logo.jpg">
+<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png?v=2">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
 <meta name="theme-color" content="#F6F1E5">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="WRITEopia">
-<meta property="og:title" content="WRITEopia｜English &amp; IELTS 線上英文與雅思課程">
+<meta property="og:title" content="WRITEopia 雅思✨寫作方程｜專業英文 &amp; 雅思課程">
 <meta property="og:description" content="從發音、文法到雅思寫作與口說，一起探索文字的可能。免費教材、寫作挑戰與試課預約。">
 <meta property="og:url" content="https://www.writeopia.tw/">
 <meta property="og:image" content="https://www.writeopia.tw/assets/og-image.png">
@@ -29,7 +30,7 @@
    "name": "WRITEopia",
    "alternateName": "IELTS in WRITEopia",
    "url": "https://www.writeopia.tw/",
-   "logo": "https://www.writeopia.tw/assets/logo.jpg",
+   "logo": "https://www.writeopia.tw/assets/favicon-512.png",
    "image": "https://www.writeopia.tw/assets/og-image.png",
    "description": "WRITEopia 提供線上英文與雅思課程：自然發音、文法、生活英文、英文寫作，以及雅思聽說讀寫備考，一對一或小團體教學。",
    "email": "writeopia.tw@gmail.com",
@@ -1997,7 +1998,7 @@ class Component extends DCLogic {
   trackView() {
     const s = this.state, post = s.page === 'blog' && s.blogSlug ? (s.blog || []).find(p => p.slug === s.blogSlug) : null, key = s.page + '/' + (s.blogSlug || '') + (post ? '+' : '');
     if (this._lastView === key) return; const first = this._lastView == null, sameView = this._lastView === key.replace(/\+$/, ''); this._lastView = key;
-    const TT = { home: 'WRITEopia｜English & IELTS 線上英文與雅思課程', about: '品牌故事｜WRITEopia', courses: '課程介紹｜WRITEopia', materials: '教材下載｜WRITEopia', blog: 'Writing Lab 寫作挑戰｜WRITEopia', booking: '預約試課｜WRITEopia', faq: '常見問題｜WRITEopia' };
+    const TT = { home: 'WRITEopia 雅思✨寫作方程｜專業英文 & 雅思課程', about: '品牌故事｜WRITEopia', courses: '課程介紹｜WRITEopia', materials: '教材下載｜WRITEopia', blog: 'Writing Lab 寫作挑戰｜WRITEopia', booking: '預約試課｜WRITEopia', faq: '常見問題｜WRITEopia' };
     try { document.title = post ? post.title + '｜WRITEopia Writing Lab' : (TT[s.page] || TT.home); } catch (e) {}
     if ((first && s.page === 'home') || sameView) return;
     const path = '/' + s.page + (s.blogSlug ? '/' + s.blogSlug : '');
