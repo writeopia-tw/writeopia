@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=4">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=4">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="writeopia.tw">
+<meta property="og:site_name" content="WRITEopia">
 <meta property="og:title" content="雅思寫作 Task 2 題庫搜尋（2024–2026）| WRITEopia">
 <meta property="og:description" content="227 道 Task 2 考生回憶題，用關鍵字、題型、主題、年份找題目，選好就能在網頁上模擬寫作。">
 <meta property="og:url" content="https://www.writeopia.tw/exercises/task2-bank.html">
@@ -190,6 +190,7 @@ main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
 .wbody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(260px,.9fr) 1.6fr}
 .wq{overflow:auto;padding:22px clamp(14px,2.5vw,28px);border-right:1px solid var(--line);background:var(--panel2)}
 .wq .qtext{grid-column:auto;font-size:18px;margin:12px 0}
+.wq .ptip{margin:-6px 0 14px;font-size:13px;line-height:1.7;color:var(--blue-d);background:#fff;border:1px dashed var(--blue-m);border-radius:6px;padding:7px 10px}
 .wq .req{font-family:'Noto Serif TC',Georgia,serif;font-style:italic;color:var(--mute);margin:0 0 16px}
 .wq .typenote{margin:0 0 14px}
 .wq .notice{margin:0;font-size:13px}
@@ -352,6 +353,7 @@ main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
    <div class="qmeta" id="wMeta"></div>
    <p class="qtext" id="wQ"></p>
    <p class="req">Write at least 250 words.</p>
+   <p class="ptip">💡 段落之間空一行（按兩次 Enter）。電腦考不能用 Tab 縮排，空行才能讓考官一眼看出分段。</p>
    <p class="typenote" id="wNote"></p>
    <details class="notice" id="wNotice"><summary>⚠️ 草稿只暫存在這個瀏覽器</summary>
     <ul>
@@ -364,7 +366,7 @@ main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
   </aside>
   <section class="wpad">
    <label class="sr" for="wText">寫作區</label>
-   <textarea id="wText" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Start writing here..."></textarea>
+   <textarea id="wText" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Start writing here...&#10;&#10;段落之間請空一行（按兩次 Enter），考官才看得出分段。"></textarea>
    <div class="wfoot"><span class="wcount" id="wCount"><b>0</b> words</span><span class="wsaved" id="wSaved"></span></div>
    <div class="gpanel" id="gPanel" hidden></div>
    <div class="wact">
