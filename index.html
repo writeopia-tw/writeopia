@@ -227,6 +227,30 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
 @keyframes woSlideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @keyframes woFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes woStamp{0%{opacity:0;transform:rotate(-14deg) scale(1.4)}100%{opacity:1;transform:rotate(-8deg) scale(1)}}
+@keyframes woPromoIn{0%{opacity:0;transform:translateY(24px) scale(.96)}70%{opacity:1;transform:translateY(-4px) scale(1.01)}100%{opacity:1;transform:none}}
+@keyframes woWiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes woBlink{0%,100%{opacity:1}50%{opacity:.25}}
+.wo-promo{position:fixed;right:24px;bottom:24px;z-index:80;width:min(360px,calc(100vw - 32px));background:#F3F8FC;border:1.5px solid #2F6690;border-radius:16px;box-shadow:6px 6px 0 #C7DDEC,0 12px 30px rgba(35,78,110,.18);padding:20px 20px 18px;color:#2E3A45;animation:woPromoIn .55s cubic-bezier(.2,.9,.3,1.2) both;font-family:'Noto Sans TC','Source Sans 3',sans-serif}
+.wo-promo .pr-x{position:absolute;top:8px;right:8px;width:36px;height:36px;border:0;border-radius:50%;background:none;color:#7F93A3;font-size:22px;line-height:1;cursor:pointer}
+.wo-promo .pr-x:hover{background:#DCE9F3;color:#234E6E}
+.wo-promo .pr-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.wo-promo .pr-ico{flex:none;width:52px;height:52px;border-radius:50%;background:#fff;border:1.5px dashed #6F9CC0;display:grid;place-items:center;font-size:26px}
+.wo-promo .pr-ico span{display:inline-block;animation:woWiggle 1.6s ease-in-out infinite}
+.wo-promo .pr-new{display:inline-block;font-family:'Special Elite',monospace;font-size:11px;letter-spacing:.14em;color:#C95440;border:1px solid #C95440;border-radius:3px;padding:2px 7px;transform:rotate(-4deg);background:#fff}
+.wo-promo .pr-new i{font-style:normal;display:inline-block;width:6px;height:6px;border-radius:50%;background:#C95440;margin-right:5px;vertical-align:1px;animation:woBlink 1.2s infinite}
+.wo-promo h3{margin:6px 0 0;font-size:18px;line-height:1.35;color:#234E6E}
+.wo-promo p{margin:0 0 10px;font-size:14px;line-height:1.7}
+.wo-promo ul{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.55}
+.wo-promo li{display:flex;gap:8px;align-items:flex-start;background:#fff;border-radius:8px;padding:7px 10px}
+.wo-promo li b{color:#234E6E}
+.wo-promo .pr-act{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wo-promo .pr-go{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 18px;border-radius:999px;background:#2F6690;color:#fff;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 3px 0 #234E6E;transition:transform .15s,box-shadow .15s}
+.wo-promo .pr-go:hover{color:#fff;background:#234E6E;transform:translateY(1px);box-shadow:0 2px 0 #1B3C55}
+.wo-promo .pr-later{border:0;background:none;color:#5E6E7B;font-size:14px;text-decoration:underline;text-underline-offset:3px;padding:8px;cursor:pointer}
+.wo-promo .pr-later:hover{color:#234E6E}
+.wo-promo .pr-never{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:13px;color:#5E6E7B;cursor:pointer;user-select:none}
+.wo-promo .pr-never input{width:16px;height:16px;accent-color:#2F6690;margin:0;cursor:pointer}
+@media (max-width:560px){.wo-promo{right:16px;left:16px;bottom:16px;width:auto;padding:18px 16px 16px}.wo-promo ul{font-size:13px}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 .wo-faq>summary::-webkit-details-marker{display:none}
 .wo-faq>summary:focus{outline:none}
@@ -1171,11 +1195,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           <h2 style="margin:0;font-family:'Essays1743','IM Fell English',serif;font-weight:400;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:#42685D">Interactive Practice</h2>
           <span style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.14em;color:#42685D">PRACTICE ONLINE</span>
         </div>
-        <p style="margin:0;font-size:16px;line-height:1.8;max-width:720px;text-wrap:pretty">網頁式的線上複習，打開就能練，不用下載或登入。答錯的題目會記在你的瀏覽器裡，下次回來可以直接重練。</p>
+        <p style="margin:0;font-size:16px;line-height:1.8;max-width:720px;text-wrap:pretty">網頁式的線上複習，打開就能練，不用下載或登入。練習紀錄會記在你的瀏覽器裡，下次回來可以接著練。</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:22px">
           <sc-for list="{{ exercises }}" as="ex" hint-placeholder-count="1">
             <a href="{{ ex.href }}" style="text-decoration:none;color:#403E34;background:#FFF9EE;border:1px solid #D9D0BC;border-radius:3px;display:flex;flex-direction:column;overflow:hidden;transition:border-color .2s,transform .2s" style-hover="border-color:#C95440;transform:translateY(-3px);color:#403E34">
-              <div style="background:#DCE6DF;padding:24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #D9D0BC">
+              <div style="background:{{ ex.cover }};padding:24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #D9D0BC">
                 <sc-for list="{{ ex.rows }}" as="vr" hint-placeholder-count="3">
                   <div style="display:flex;gap:8px;flex-wrap:wrap">
                     <sc-for list="{{ vr.cells }}" as="vc" hint-placeholder-count="3">
@@ -1232,6 +1256,26 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
         </div>
       </section>
     </div>
+    <sc-if value="{{ promoShow }}" hint-placeholder-val="{{ false }}">
+      <aside class="wo-promo" role="dialog" aria-labelledby="woPromoTitle">
+        <button class="pr-x" onClick="{{ promoLater }}" aria-label="關閉">×</button>
+        <div class="pr-top">
+          <div class="pr-ico" aria-hidden="true"><span>✍️</span></div>
+          <div><span class="pr-new"><i></i>NEW</span><h3 id="woPromoTitle">Task 2 線上題庫上線囉！</h3></div>
+        </div>
+        <p>不用下載、不用登入，打開網頁就能找題目、直接開寫 ✨</p>
+        <ul>
+          <li><span aria-hidden="true">🔍</span><span><b>227 題</b>：近三年考題，用關鍵字、題型、主題、年份一搜就有</span></li>
+          <li><span aria-hidden="true">⏱️</span><span><b>模擬寫作</b>：選好題目就能寫，有字數統計和 40 分鐘計時</span></li>
+          <li><span aria-hidden="true">📄</span><span><b>寫完</b>：可以檢查文法、下載 Word，再交給老師或AI批改</span></li>
+        </ul>
+        <div class="pr-act">
+          <a class="pr-go" href="exercises/task2-bank.html" onClick="{{ promoGo }}">馬上試試 →</a>
+          <button class="pr-later" onClick="{{ promoLater }}">下次再說</button>
+        </div>
+        <label class="pr-never"><input type="checkbox" id="woPromoNever"> 不用再顯示</label>
+      </aside>
+    </sc-if>
   </sc-if>
   <sc-if value="{{ isBooking }}" hint-placeholder-val="{{ false }}">
     <div style="animation:woFade .45s ease both;max-width:1180px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(18px,4vw,40px);display:flex;flex-direction:column;gap:32px">
@@ -1785,7 +1829,7 @@ const PREP = [
   ['平常聯繫方式', '平常聯繫可以透過 Gmail / IG / LINE。']
 ];
 const MATERIALS = [
-  { id: 'f11', type: 'wt2', isNew: true, title: '2024–2026 雅思寫作 Task 2 題庫整理', coverTitle: 'Task 2 Question Bank', meta: 'TASK 2 · 2024–2026 · 227 題', desc: '收錄 2024–2026 年考生回憶的 227 道 Task 2 題目，依 7 種題型、14 個主題分類，並附三年出題次數統計。可以先練出現最多的題型與主題，再逐步補齊其他主題。', files: [['IELTS_Task2_2024_2026_Question_Bank.pdf', 'https://drive.google.com/file/d/1x0etU49UrhTUVz6_AVR5Zv1RywcNmfQJ/view?usp=drive_link']] },
+  { id: 'f11', type: 'wt2', isNew: true, title: '2024–2026 雅思寫作 Task 2 題庫整理', coverTitle: 'Task 2 Question Bank', meta: 'TASK 2 · 2024–2026 · 227 題', desc: '收錄 2024–2026 年考生回憶的 227 道 Task 2 題目，依 7 種題型、14 個主題分類，並附三年出題次數統計。可以先練出現最多的題型與主題，再逐步補齊其他主題。線上搜尋版在下方 Interactive Practice。', files: [['IELTS_Task2_2024_2026_Question_Bank.pdf', 'https://drive.google.com/file/d/1x0etU49UrhTUVz6_AVR5Zv1RywcNmfQJ/view?usp=drive_link']] },
   { id: 'f10', type: 'speaking', isNew: true, title: 'Part 1 用題目練熟時態x主題字彙', coverTitle: 'Part 1 Tenses × Vocab', meta: 'SPEAKING · PART 1 · 2026 SEP–DEC', desc: '依 2026 年 9–12 月 Part 1 題庫，把題目按時態分成八個單元，從現在簡單式到假設語氣。每題附建議表達與主題字彙，先把目標時態用準，再換個人例子重答一次。', files: [['IELTS_Speaking_P1_時態x字彙.pdf', 'https://drive.google.com/file/d/1yLPVj8TugIgYKOBZByHWcesVrkWiJUia/view?usp=drive_link']] },
   { id: 'f1', type: 'speaking', isNew: true, title: '2026/9–12月口說題庫預測整理', coverTitle: 'Speaking Forecast', meta: 'SPEAKING · 2026 SEP–DEC', desc: '整理 2026 年 9–12 月雅思口說題庫的預測題目。備考時可先瀏覽本季主題，挑出不熟悉的題目優先練習。', files: [['2026年9–12月雅思口說題庫預測', 'https://drive.google.com/file/d/1A0_W4REX16IDzhOGwUZpsUIZ4QlPqOAp/view?usp=drive_link']] },
   { id: 'f2', type: 'wt1', title: 'Line Graph（句型／架構）', coverTitle: 'Line Graph', meta: 'TASK 1 · 句型與架構系列', desc: '整理 Line Graph 常用的描述句型與段落架構。從開頭改寫、總覽到細節段，幫你有條理地描述數據趨勢。', files: [['line_graph_handout.pdf', 'https://drive.google.com/file/d/1BeLfCW_woYF9Z8YtH51VpvH8JLLj7pBC/view?usp=drive_link']] },
@@ -1808,7 +1852,8 @@ const KB_SEQ = [13, 15, 19, 16, 14, 20, 21, 19, 24];
 const MAT_SPINES = { speaking: '#C95440', wt1: '#42685D', wt2: '#B39556', reading: '#8C7FA3' };
 const MAT_COVERS = { speaking: '#F3E1D8', wt1: '#DCE6DF', wt2: '#EDE5D2', reading: '#E6E1EC' };
 const EXERCISES = [
-  { href: 'exercises/irregular-verbs.html', meta: 'EXERCISE 01 · GRAMMAR', title: 'Irregular Verbs', zh: '不規則動詞訓練室', desc: '129 個不規則動詞，從三態拼寫到時態應用，陪你一步步練熟。', modes: ['三態表＋發音', '拼字測驗', '時態判斷', '自主選字', '錯題重練'], rows: [['go', 'went', 'gone'], ['write', 'wrote', 'written'], ['think', 'thought', 'thought']] }
+  { href: 'exercises/irregular-verbs.html', meta: 'EXERCISE 01 · GRAMMAR', title: 'Irregular Verbs', zh: '不規則動詞訓練室', desc: '129 個不規則動詞，從三態拼寫到時態應用，陪你一步步練熟。', modes: ['三態表＋發音', '拼字測驗', '時態判斷', '自主選字', '錯題重練'], rows: [['go', 'went', 'gone'], ['write', 'wrote', 'written'], ['think', 'thought', 'thought']] },
+  { href: 'exercises/task2-bank.html', meta: 'EXERCISE 02 · WRITING TASK 2', title: 'Task 2 Question Bank', zh: '寫作題庫', desc: '2024–2026 年考生回憶的 227 道 Task 2 題目。用關鍵字、題型、主題、年份找題目，選好就能在網頁上模擬寫作，寫完複製或下載，再交給老師或AI批改。', modes: ['關鍵字搜尋', '題型／主題／年份篩選', '隨機抽一題', '模擬寫作＋計時', '文法檢查', '下載 Word／txt'], rows: [['Agree?', '教育', '’24'], ['Discuss', '科技', '’25'], ['Causes', '環境', '’26']], cover: '#DCE9F3', palette: ['#FFFFFF', '#6F9CC0', '#2F6690', '#234E6E'] }
 ];
 const KEYS = 'WRITEopia'.split('');
 const PORTALY_SHOP = 'https://portaly.cc/WRITEopia';
@@ -2016,6 +2061,12 @@ class Component extends DCLogic {
   }
   renderVals() {
     const s = this.state;
+    if (s.page === 'materials' && !this._promoTimer) {
+      let seen = null; try { seen = localStorage.getItem('wo-promo-t2bank'); } catch (e) {}
+      const wait = seen === 'never' || (seen && Date.now() - Number(seen) < 3 * 864e5);
+      if (!wait) this._promoTimer = setTimeout(() => { if (this.state.page === 'materials') this.setState({ promoOpen: true }); else this._promoTimer = null; }, 1500);
+      else this._promoTimer = 'skip';
+    }
     this.trackView(); this.bindClickTracking();
     const nav = [['courses', 'Courses'], ['materials', 'Materials'], ['blog', 'Writing Lab'], ['booking', 'Booking'], ['faq', 'FAQ']];
     const jump = id => () => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); };
@@ -2043,7 +2094,9 @@ class Component extends DCLogic {
     const matFilters = MAT_FILTERS.map(([k, label]) => { const on = mf === k; const tint = MAT_COVERS[k] || '#ECE5D6', solid = MAT_SPINES[k] || '#2E2B24'; return { label, pressed: on ? 'true' : 'false', go: () => this.setState({ matFilter: k }), count: String(MATERIALS.filter(m => (k === 'all' || m.type === k) && mHit(m)).length).padStart(2, '0'), bg: on ? solid : tint, color: on ? '#FFF9EE' : '#2E2B24', countColor: on ? 'rgba(255,249,238,.8)' : '#6B6658', shadow: on ? 'inset 0 2px 5px rgba(0,0,0,.32), inset 0 -1px 0 rgba(255,255,255,.12)' : '0 2px 0 rgba(46,43,36,.14), 0 4px 10px -4px rgba(46,43,36,.3)', shift: on ? 'translateY(1px)' : 'none' }; });
     return {
       textureOpacity: (this.props.paperTexture ?? true) ? 0.5 : 0,
-      isHome: s.page === 'home', visToday: s.visToday ?? '—', visTotal: s.visTotal ?? '—', isCourses: s.page === 'courses', isMaterials: s.page === 'materials', isBooking: s.page === 'booking', isFaq: s.page === 'faq', isAbout: s.page === 'about', ...this.blogVals(),
+      isHome: s.page === 'home', visToday: s.visToday ?? '—', visTotal: s.visTotal ?? '—', isCourses: s.page === 'courses', isMaterials: s.page === 'materials', promoShow: s.page === 'materials' && !!s.promoOpen,
+      promoLater: () => { const nv = document.getElementById('woPromoNever'); try { localStorage.setItem('wo-promo-t2bank', nv && nv.checked ? 'never' : String(Date.now())); } catch (e) {} this.setState({ promoOpen: false }); },
+      promoGo: () => { try { localStorage.setItem('wo-promo-t2bank', 'never'); if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'click-t2bank-promo', title: 'Task 2 題庫彈窗', event: true }); } catch (e) {} this.setState({ promoOpen: false }); }, isBooking: s.page === 'booking', isFaq: s.page === 'faq', isAbout: s.page === 'about', ...this.blogVals(),
       navItems: nav.map(([k, label]) => ({ label, go: () => this.go(k), color: s.page === k ? '#C95440' : '#42685D', line: s.page === k ? '#C95440' : 'transparent', dot: s.page === k ? '#C95440' : 'transparent' })),
       homeNav: { color: ['home', 'about'].includes(s.page) ? '#C95440' : '#42685D', line: ['home', 'about'].includes(s.page) ? '#C95440' : 'transparent', dot: ['home', 'about'].includes(s.page) ? '#C95440' : 'transparent' },
       homeMenuShow: !!s.homeMenu, homeMenuExpanded: s.homeMenu ? 'true' : 'false',
@@ -2110,7 +2163,7 @@ class Component extends DCLogic {
         ['課程規劃', '討論並量身安排主題、進度與合適的專業課本或自製教材。'],
         ['開始上課', '每堂課後提供回饋，隨時依進度調整。']
       ].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
-      exercises: EXERCISES.map(e => ({ ...e, modes: e.modes.map(label => ({ label })), rows: e.rows.map(r => ({ cells: r.map((w, i) => ({ w, bg: i === 0 ? '#FFF9EE' : i === 1 ? '#C95440' : '#42685D', color: i === 0 ? '#42685D' : '#FFF9EE' })) })) })),
+      exercises: EXERCISES.map(e => { const pal = e.palette || ['#FFF9EE', '#C95440', '#42685D', '#42685D']; return { ...e, cover: e.cover || '#DCE6DF', modes: e.modes.map(label => ({ label })), rows: e.rows.map(r => ({ cells: r.map((w, i) => ({ w, bg: pal[i], color: i === 0 ? pal[3] : '#FFFFFF' })) })) }; }),
       verbRows: [['go', 'went', 'gone'], ['write', 'wrote', 'written'], ['think', 'thought', 'thought']].map(r => ({ cells: r.map((w, i) => ({ w, bg: i === 0 ? '#FFF9EE' : i === 1 ? '#C95440' : '#42685D', color: i === 0 ? '#42685D' : '#FFF9EE' })) })),
       portalyShop: PORTALY_SHOP, sharedList: SHARED, sharedEmpty: SHARED.length === 0,
       buySteps: [['挑選教材', '在下方找到需要的教材，免費即可直接下載。'], ['Portaly 付款', '付費教材需點「在 Portaly 購買」，用信用卡安全付款。'], ['收到檔案', '付款完成後，下載連結會自動寄到你的 Email。']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0'), bg: i === 1 ? '#C95440' : '#42685D' })),
