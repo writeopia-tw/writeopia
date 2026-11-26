@@ -1,0 +1,63 @@
+# WRITEopia：每天自動更新 Task 2 題庫的「🔥 熱門」題目
+# 從 GoatCounter 讀取近 30 天「寫到 100 字」的次數，取前 10 名，
+# 寫進 exercises/task2-bank-hot.json。題庫頁會讀這個檔案顯示熱門標籤。
+#
+# 需要先在 GitHub repo 設定 Secret：GOATCOUNTER_TOKEN（GoatCounter 的 API 金鑰）
+
+name: Task 2 熱門題目
+
+on:
+  schedule:
+    - cron: "23 19 * * *"   # 每天台灣時間凌晨 3:23
+  workflow_dispatch:         # 也可以在 Actions 頁面手動執行
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 計算熱門題目
+        env:
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+          GOATCOUNTER_SITE: writeopia
+          WINDOW_DAYS: "30"
+          TOP_N: "10"
+        run: |
+          cat > /tmp/hot.mjs <<'EOF'
+          import { writeFileSync, readFileSync } from 'node:fs';
+          const token = process.env.GOATCOUNTER_TOKEN;
+          if (!token) { console.error('缺少 GOATCOUNTER_TOKEN secret'); process.exit(1); }
+          const base = `https://${process.env.GOATCOUNTER_SITE}.goatcounter.com/api/v0`;
+          const days = Number(process.env.WINDOW_DAYS), top = Number(process.env.TOP_N);
+          const hour = d => d.toISOString().slice(0, 13) + ':00:00Z';
+          const end = new Date(), start = new Date(end - days * 864e5);
+          const sleep = ms => new Promise(r => setTimeout(r, ms));
+          const counts = {}; const seen = []; let more = true, page = 0;
+          while (more && page < 50) {
+            const q = new URLSearchParams({ start: hour(start), end: hour(end), limit: '100' });
+            seen.forEach(id => q.append('exclude_paths', String(id)));
+            const res = await fetch(`${base}/stats/hits?${q}`, { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } });
+            if (!res.ok) { console.error('GoatCounter API 錯誤', res.status, await res.text()); process.exit(1); }
+            const j = await res.json();
+            for (const h of j.hits || []) {
+              seen.push(h.path_id);
+              const m = /^t2bank-practiced-(\d-\d+)$/.exec(h.path || '');
+              if (m) counts[m[1]] = (counts[m[1]] || 0) + (h.count || 0);
+            }
+            more = !!j.more && (j.hits || []).length > 0; page++;
+            await sleep(400);
+          }
+          const ranked = Object.entries(counts).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en', { numeric: true }));
+          const ids = ranked.slice(0, top).map(([id]) => id);
+          console.log('近', days, '天練過次數：', ranked.slice(0, 20));
+          const file = 'exercises/task2-bank-hot.json';
+          let old = ''; try { old = JSON.stringify(JSON.parse(readFileSync(file, 'utf8')).ids); } catch (e) {}
+          if (old === JSON.stringify(ids)) { console.log('熱門題目沒有變化'); process.exit(0); }
