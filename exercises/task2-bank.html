@@ -149,6 +149,7 @@ main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
 .tag.space{background:#ECE8F4;color:#5f4f7d}
 .tag.done{background:#E3EFE7;color:#2F6B4A;font-weight:600}
 .tag.draft{background:var(--warn-bg);color:var(--warn-ink)}
+.tag.hot{background:#FFE7D6;color:#B4451F;font-weight:700}
 .tag.form{background:none;color:var(--blue);font-style:italic;padding-left:0}
 .qtext{grid-column:2;margin:4px 0 0;font-family:'Noto Serif TC',Georgia,serif;font-size:17px;line-height:1.75;color:#1F2A33}
 .qtext mark{background:#FCE7B2;color:inherit;padding:0 1px;border-radius:2px}
@@ -333,6 +334,7 @@ main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
    <li>題目來自 2024–2026 年有標示年份的考生回憶題。同一題在不同年份重複出現時合併成一題，年份以橘色標示。</li>
    <li>每題只歸入一個題型和一個主題，並改寫成完整的 IELTS 題目。這份整理和 IELTS 官方無關，官方不公開實際出題頻率。</li>
    <li>寫作時不會跳出拼字提示，跟電腦考一樣；寫完可以用「檢查 ▾」檢查文法與拼字，或複製 AI 批改指令。</li>
+   <li>🔥 熱門：近 30 天最多人寫到 100 字的 10 題，每天自動更新。</li>
    <li>想印出來或離線練習，可以到 <a href="../index.html#/materials">Materials</a> 下載 PDF 版。</li>
    <li id="updated"></li>
   </ul>
@@ -422,7 +424,8 @@ const saveDone = () => store.set(DONE_KEY, [...done]);
 const getDraft = id => { const d = store.get(DRAFT_KEY(id)); return d && d.text && d.text.trim() ? d : null; };
 const words = t => (t.trim().match(/\S+/g) || []).filter(w => /[A-Za-z0-9]/.test(w)).length;
 
-const st = { q:'', type:null, theme:null, years:new Set(), repeat:false, space:false, todo:false, drafts:false, shown:40, pick:null };
+const st = { q:'', type:null, theme:null, years:new Set(), repeat:false, space:false, todo:false, drafts:false, hot:false, shown:40, pick:null };
+let HOT = new Set();
 QS.forEach(q => {
  q.textL = q.text.toLowerCase();
  q.zh = [THEMES[q.theme], TYPES[q.type].zh, q.sub ? SUB[q.sub] : '', q.tags.includes('space') ? '太空' : ''].join(' ');
@@ -447,6 +450,7 @@ function match(q, skip){
  if (skip !== 'theme' && st.space && !q.tags.includes('space')) return false;
  if (st.todo && done.has(q.id)) return false;
  if (st.drafts && !getDraft(q.id)) return false;
+ if (st.hot && !HOT.has(q.id)) return false;
  return true;
 }
 function chip(label, n, pressed, onClick, alt){
@@ -470,6 +474,7 @@ function renderFilters(){
  const fO = $('fOther'); fO.innerHTML = '';
  fO.append(chip('跨年重複出現', null, st.repeat, () => { st.repeat = !st.repeat; update(); }, true));
  fO.append(chip('只看還沒練過', null, st.todo, () => { st.todo = !st.todo; update(); }, true));
+ if (HOT.size) fO.prepend(chip('🔥 熱門題目', null, st.hot, () => { st.hot = !st.hot; if (st.hot) count('hot-filter')(); update(); }, true));
  fO.append(chip('有草稿的題目', null, st.drafts, () => { st.drafts = !st.drafts; update(); }, true));
 }
 function hl(text){
@@ -481,7 +486,7 @@ function hl(text){
 function metaHTML(q){
  const yrs = q.years.map(y => '<span class="tag yr' + (q.years.length > 1 ? ' rep' : '') + '">’' + y + '</span>').join('');
  const dr = getDraft(q.id);
- return '<span class="tag type">' + esc(TYPES[q.type].en) + '</span>' + (q.sub ? '<span class="tag">' + esc(SUB[q.sub] || q.sub) + '</span>' : '') + '<span class="tag">' + esc(THEMES[q.theme] || q.theme) + '</span>' + yrs + (q.tags.includes('space') ? '<span class="tag space">太空</span>' : '') + (done.has(q.id) ? '<span class="tag done">✓ 已寫過</span>' : '') + (dr ? '<span class="tag draft">📝 草稿 ' + words(dr.text) + ' 字</span>' : '') + (q.form ? '<span class="tag form">' + esc(q.form) + '</span>' : '');
+ return (HOT.has(q.id) ? '<span class="tag hot">🔥 熱門</span>' : '') + '<span class="tag type">' + esc(TYPES[q.type].en) + '</span>' + (q.sub ? '<span class="tag">' + esc(SUB[q.sub] || q.sub) + '</span>' : '') + '<span class="tag">' + esc(THEMES[q.theme] || q.theme) + '</span>' + yrs + (q.tags.includes('space') ? '<span class="tag space">太空</span>' : '') + (done.has(q.id) ? '<span class="tag done">✓ 已寫過</span>' : '') + (dr ? '<span class="tag draft">📝 草稿 ' + words(dr.text) + ' 字</span>' : '') + (q.form ? '<span class="tag form">' + esc(q.form) + '</span>' : '');
 }
 function card(q, isPick){
  const d = done.has(q.id), dr = getDraft(q.id);
@@ -512,9 +517,10 @@ function activeList(){
  if (st.space) a.push(['太空', () => { st.space = false; }]);
  if (st.todo) a.push(['只看還沒練過', () => { st.todo = false; }]);
  if (st.drafts) a.push(['有草稿的題目', () => { st.drafts = false; }]);
+ if (st.hot) a.push(['🔥 熱門題目', () => { st.hot = false; }]);
  return a;
 }
-function clearAll(){ Object.assign(st, { q:'', type:null, theme:null, repeat:false, space:false, todo:false, drafts:false, pick:null }); st.years.clear(); $('q').value = ''; update(); }
+function clearAll(){ Object.assign(st, { q:'', type:null, theme:null, repeat:false, space:false, todo:false, drafts:false, hot:false, pick:null }); st.years.clear(); $('q').value = ''; update(); }
 function renderActive(){
  const a = activeList(), box = $('active'); box.innerHTML = '';
  if (!a.length) return;
@@ -524,7 +530,7 @@ function renderActive(){
 }
 function update(){
  st.shown = 40; renderFilters(); renderList(); renderActive(); $('sbox').classList.toggle('has', !!st.q);
- const n = (st.type?1:0) + (st.theme?1:0) + st.years.size + (st.repeat?1:0) + (st.space?1:0) + (st.todo?1:0) + (st.drafts?1:0);
+ const n = (st.type?1:0) + (st.theme?1:0) + st.years.size + (st.repeat?1:0) + (st.space?1:0) + (st.todo?1:0) + (st.drafts?1:0) + (st.hot?1:0);
  $('fsum').textContent = '篩選條件：題型・主題・年份' + (n ? '（已選 ' + n + ' 項）' : '');
 }
 function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2000); }
@@ -562,6 +568,13 @@ function saveDraft(){
  if (!W.q) return; const text = $('wText').value;
  if (!text.trim()) { store.del(DRAFT_KEY(W.q.id)); drawSaved(null); return; }
  const d = { text, t: Date.now() }; drawSaved(d, !store.set(DRAFT_KEY(W.q.id), d));
+ markPracticed(W.q.id, text);
+}
+/* 寫到 100 字 → 記一次「練過」（同一台裝置同一題只記一次），供每日熱門排行使用 */
+function markPracticed(id, text){
+ const k = 'wo-t2bank-prac:' + id;
+ if (words(text) < 100 || store.get(k)) return;
+ try { if (window.goatcounter && window.goatcounter.count) { window.goatcounter.count({ path: 't2bank-practiced-' + id, title: 'Task 2 練過 ' + id, event: true }); store.set(k, 1); } } catch (e) {}
 }
 function drawWDone(){ const d = done.has(W.q.id); $('wDone').textContent = d ? '✓ 已寫過' : '☐ 標記寫過了'; $('wDone').classList.toggle('on', d); }
 function showWriter(id){
@@ -761,6 +774,10 @@ if (!QS.length) $('list').innerHTML = '<div class="empty">題庫資料沒有載�
 if (window.innerWidth < 760) $('fbox').removeAttribute('open');
 update();
 syncHash();
+/* 熱門題目：每天由 GitHub 自動更新 task2-bank-hot.json */
+fetch('task2-bank-hot.json?d=' + new Date().toISOString().slice(0, 10), { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(j => {
+ if (j && Array.isArray(j.ids) && j.ids.length) { HOT = new Set(j.ids); renderFilters(); renderList(); }
+}).catch(() => {});
 </script>
 </body>
 </html>
