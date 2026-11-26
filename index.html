@@ -1291,6 +1291,18 @@ button:focus-visible,a:focus-visible{outline:2px solid #C95440;outline-offset:3p
           <span style="font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.16em;color:#C95440">THIS MONTH'S SLOTS</span>
           <h2 style="margin:0;font-family:'Noto Sans TC',sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,28px);line-height:1.4;color:#42685D">查看目前開放時段，直接線上預約</h2>
           <p style="margin:0;font-size:16px;line-height:1.8;text-wrap:pretty">點下方按鈕會開啟預約頁，選好時間並簡單填寫你的學習需求。</p>
+          <sc-if value="{{ slotOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;display:flex;flex-direction:column;gap:2px;padding:12px 16px;border:1.5px dashed #42685D;border-radius:3px;background:#F6F1E5">
+              <span style="font-size:15px;color:#42685D">最早可預約時段 <strong style="font-size:18px;font-weight:700;color:#C95440;margin-left:4px">{{ slotLabel }}</strong></span>
+              <span style="font-size:12px;color:#7A7566">實際時段以預約頁為準</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ slotFull }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;display:flex;flex-direction:column;gap:2px;padding:12px 16px;border:1.5px dashed #C95440;border-radius:3px;background:#F6F1E5">
+              <span style="font-size:16px;font-weight:700;color:#C95440">目前時段已滿 / Fully booked at the moment</span>
+              <span style="font-size:13px;line-height:1.7">想排候補或詢問其他時間，請透過 <a href="https://lin.ee/pqp4nnK" target="_blank" rel="noopener">官方 LINE</a> 聯絡我們。</span>
+            </div>
+          </sc-if>
           <a href="{{ bookingUrl }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:10px;background:#C95440;color:#FFF9EE;text-decoration:none;border-radius:3px;padding:15px 24px;min-height:52px;font-size:16px;font-weight:700;transition:transform .2s,background .2s" style-hover="background:#B4462F;color:#FFF9EE;transform:translateY(-2px)">選擇試課時段 ↗</a>
         </div>
         <ol style="margin:0;padding:clamp(26px,4vw,44px);list-style:none;display:flex;flex-direction:column;background:#DCE6DF">
@@ -1926,6 +1938,14 @@ class Component extends DCLogic {
   readComments() { try { return JSON.parse(localStorage.getItem('wo-comments') || '{}'); } catch (e) { return {}; } }
   openPost(slug) { history.pushState(null, '', '#/blog/' + encodeURIComponent(slug)); this.setState({ page: 'blog', blogSlug: slug }); window.scrollTo(0, 0); }
   toContact() { setTimeout(() => { const el = document.getElementById('contact'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }, 80); }
+  loadSlot() {
+    // 預約頁最早時段：由 GitHub 每 3 小時讀取 Google 預約頁後寫入 booking-status.json
+    fetch('booking-status.json?t=' + Math.floor(Date.now() / 6e5), { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(j => {
+      if (!j || !j.checked || Date.now() - Date.parse(j.checked) > 30 * 3600e3) return;
+      if (j.status === 'open' && j.label) this.setState({ slot: { open: true, label: j.label } });
+      else if (j.status === 'full') this.setState({ slot: { full: true } });
+    }).catch(() => {});
+  }
   loadVisitors() {
     const base = 'https://writeopia.goatcounter.com/counter/TOTAL.json';
     const day = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' });
@@ -1933,7 +1953,7 @@ class Component extends DCLogic {
     const n = v => { const x = parseInt(String(v || '').replace(/[^0-9]/g, ''), 10); return isNaN(x) ? null : x; };
     Promise.all([get('?start=' + day), get(''), get('?start=2020-01-01')]).then(([t, a, b]) => { const nt = n(t), all = [n(a), n(b), nt].filter(v => v != null); this.setState({ visToday: nt == null ? null : String(nt), visTotal: all.length ? String(Math.max(...all)) : null }); });
   }
-  componentDidMount() { this.loadVisitors(); this.loadBlog(); if (this.slugFromHash()) this.setState({ blogSlug: this.slugFromHash() }); if (!window.marked) { this.mdPoll = setInterval(() => { if (window.marked) { clearInterval(this.mdPoll); this.forceUpdate(); } }, 150); } this.rTimer = setInterval(() => { if (!document.hidden) this.setState(st => ({ rIdx: st.rIdx + 1 })); }, 3200); this.tPoll = setInterval(() => { if (window.WO_STORIES) { clearInterval(this.tPoll); this.forceUpdate(); } }, 120); this.onHash = () => { const p = this.readHash(); const bs = this.slugFromHash(); if (bs !== this.state.blogSlug) { this.setState({ blogSlug: bs }); window.scrollTo(0, 0); } const c = location.hash === '#/contact'; if (p && p !== this.state.page) { this.setState({ page: p }); window.scrollTo(0, 0); } if (c) this.toContact(); const cn = this.courseFromHash(); if (cn && cn !== this.state.openCourse) setTimeout(() => this.openCourseByName(cn), 80); }; if (location.hash === '#/contact') this.toContact(); window.addEventListener('hashchange', this.onHash); const cn0 = this.courseFromHash(); if (cn0) setTimeout(() => this.openCourseByName(cn0), 500); }
+  componentDidMount() { this.loadVisitors(); this.loadSlot(); this.loadBlog(); if (this.slugFromHash()) this.setState({ blogSlug: this.slugFromHash() }); if (!window.marked) { this.mdPoll = setInterval(() => { if (window.marked) { clearInterval(this.mdPoll); this.forceUpdate(); } }, 150); } this.rTimer = setInterval(() => { if (!document.hidden) this.setState(st => ({ rIdx: st.rIdx + 1 })); }, 3200); this.tPoll = setInterval(() => { if (window.WO_STORIES) { clearInterval(this.tPoll); this.forceUpdate(); } }, 120); this.onHash = () => { const p = this.readHash(); const bs = this.slugFromHash(); if (bs !== this.state.blogSlug) { this.setState({ blogSlug: bs }); window.scrollTo(0, 0); } const c = location.hash === '#/contact'; if (p && p !== this.state.page) { this.setState({ page: p }); window.scrollTo(0, 0); } if (c) this.toContact(); const cn = this.courseFromHash(); if (cn && cn !== this.state.openCourse) setTimeout(() => this.openCourseByName(cn), 80); }; if (location.hash === '#/contact') this.toContact(); window.addEventListener('hashchange', this.onHash); const cn0 = this.courseFromHash(); if (cn0) setTimeout(() => this.openCourseByName(cn0), 500); }
   componentWillUnmount() { clearInterval(this.rTimer); clearInterval(this.tPoll); window.removeEventListener('hashchange', this.onHash); }
   go(page) { if (location.hash !== '#/' + page) history.pushState(null, '', '#/' + page); this.setState({ page, blogSlug: null }); window.scrollTo(0, 0); }
   testimonialVals() {
@@ -2128,6 +2148,7 @@ class Component extends DCLogic {
         { code: 'TKT', name: '劍橋 Teaching Knowledge Test', extra: ' — 三項模組皆為 Band 4' }
       ],
       bookingUrl: 'https://calendar.app.google/ZCGwNjovyNb8pV7XA',
+      slotOpen: !!(s.slot && s.slot.open), slotFull: !!(s.slot && s.slot.full), slotLabel: s.slot && s.slot.label || '',
       bookSteps: [['選擇時段', '在預約頁挑選有開放的試課時間。'], ['填寫學習需求', '留下姓名、Email，並寫下你想加強的部分。'], ['繳費完成預約', '完成繳費即預約成功。上課連結會在課前約 5 分鐘寄到你的信箱。']].map(([title, note], i) => ({ title, note, num: String(i + 1).padStart(2, '0') })),
       lineHref: 'https://lin.ee/pqp4nnK',
       socials: [
