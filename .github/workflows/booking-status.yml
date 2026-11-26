@@ -1,0 +1,152 @@
+# WRITEopia：每 3 小時讀取 Google 預約頁，更新預約試課頁的「最早可預約時段」
+# 結果寫進 booking-status.json，官網預約頁會讀這個檔案。
+# 讀不到預約頁時會保留上一次的結果；資料超過 30 小時沒更新，網頁就自動不顯示。
+
+name: 預約時段更新
+
+on:
+  schedule:
+    - cron: "37 */3 * * *"   # 每 3 小時一次
+  workflow_dispatch:          # 也可以在 Actions 頁面手動執行
+
+permissions:
+  contents: write
+
+concurrency:
+  group: booking-status
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 安裝瀏覽器
+        run: |
+          mkdir -p /tmp/bk && cd /tmp/bk
+          npm init -y >/dev/null
+          npm install playwright@1.49.1 --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: 讀取預約頁
+        run: |
+          cat > /tmp/bk/booking-status.mjs <<'EOF'
+          // 讀取 Google 預約頁，找出最早可預約時段，寫進 booking-status.json
+          // 用法：node booking-status.mjs <輸出檔路徑> [預約頁網址]
+          import { chromium } from 'playwright';
+          import { writeFileSync, readFileSync } from 'node:fs';
+
+          const OUT = process.argv[2] || 'booking-status.json';
+          const URL = process.argv[3] || 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1KNLGbos_30dPWhQp5ZOT4VqzT2qk7rGYeZgislD9xsOpGmvoUo6G-gODEUGCR7UfBFzjCvlsP';
+          const WINDOW_DAYS = 60;
+          const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+
+          // 台北時間「今天」
+          const nowTW = new Date(Date.now() + 8 * 3600e3);
+          const todayTW = Date.UTC(nowTW.getUTCFullYear(), nowTW.getUTCMonth(), nowTW.getUTCDate());
+
+          function to24(t) { // 「下午7:00」→ 19:00
+            const m = /(上午|下午|中午|晚上|凌晨)?\s*(\d{1,2}):(\d{2})/.exec(t); if (!m) return null;
+            let h = +m[2]; const ap = m[1] || '';
+            if ((ap === '下午' || ap === '晚上') && h < 12) h += 12;
+            if ((ap === '上午' || ap === '凌晨') && h === 12) h = 0;
+            return String(h).padStart(2, '0') + ':' + m[3];
+          }
+
+          // 從頁面右側「單日檢視」讀出 [{day, times[]}]，以及月份標題
+          async function readView(page) {
+            return page.evaluate(() => {
+              const t = document.body.innerText;
+              const hdr = (t.match(/(\d{4})年(\d{1,2})月/) || []);
+              const part = t.includes('前一天') && t.includes('隔天') ? t.split('前一天')[1].split('隔天')[0] : '';
+              const lines = part.split('\n').map(s => s.trim()).filter(Boolean);
+              const days = []; let cur = null;
+              for (let i = 0; i < lines.length; i++) {
+                if (/^週?[一二三四五六日]$/.test(lines[i]) && /^\d{1,2}$/.test(lines[i + 1] || '')) { cur = { day: +lines[i + 1], times: [] }; days.push(cur); i++; continue; }
+                if (cur && /\d{1,2}:\d{2}/.test(lines[i])) cur.times.push(lines[i]);
+              }
+              const cells = [...document.querySelectorAll('[data-grid-cell]')].length;
+              const noneMsg = /沒有可預約的時段|沒有可預約時段/.test(part);
+              return { year: hdr[1] ? +hdr[1] : null, month: hdr[2] ? +hdr[2] : null, days, cells, noneMsg };
+            });
+          }
+
+          function firstSlot(v) {
+            if (!v.year || !v.month) return null;
+            let y = v.year, m = v.month, prev = null;
+            for (const d of v.days) {
+              if (prev !== null && d.day < prev) { m++; if (m > 12) { m = 1; y++; } } // 跨月
+              prev = d.day;
+              if (d.times.length) return { y, m, d: d.day, time: to24(d.times[0]) };
+            }
+            return null;
+          }
+
+          let result;
+          const browser = await chromium.launch();
+          try {
+            const ctx = await browser.newContext({ locale: 'zh-TW', timezoneId: 'Asia/Taipei', viewport: { width: 1280, height: 900 } });
+            const page = await ctx.newPage();
+            await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await page.waitForSelector('[data-grid-cell]', { timeout: 45000 });
+            await page.waitForTimeout(2000);
+
+            let v = await readView(page);
+            let slot = firstSlot(v);
+            if (!slot) {
+              const jump = page.getByText('跳到下個可預訂的日期');
+              if (await jump.count()) { await jump.first().click(); await page.waitForTimeout(2500); v = await readView(page); slot = firstSlot(v); }
+            }
+            if (!v.cells) throw new Error('讀不到預約頁的日曆');
+
+            if (slot && slot.time) {
+              const dayMs = Date.UTC(slot.y, slot.m - 1, slot.d);
+              const diff = Math.round((dayMs - todayTW) / 864e5);
+              const wd = WEEK[new Date(dayMs).getUTCDay()];
+              if (diff >= 0 && diff <= WINDOW_DAYS) {
+                result = { status: 'open', date: `${slot.y}-${String(slot.m).padStart(2, '0')}-${String(slot.d).padStart(2, '0')}`, time: slot.time, label: `${slot.m}/${slot.d}（${wd}）${slot.time}` };
+              } else {
+                result = { status: 'full', note: `最早時段在 ${diff} 天後，超過 ${WINDOW_DAYS} 天` };
+              }
+            } else {
+              result = { status: 'full' };
+            }
+            console.log('讀到的畫面：', JSON.stringify(v));
+          } catch (e) {
+            console.error('讀取失敗：', e.message);
+            result = { status: 'unknown', error: String(e.message).slice(0, 200) };
+          } finally {
+            await browser.close();
+          }
+
+          result.checked = new Date().toISOString();
+          // 讀取失敗時保留上一次的結果，只是不更新時間（網頁會因為資料過舊而自動隱藏）
+          if (result.status === 'unknown') {
+            try { const old = JSON.parse(readFileSync(OUT, 'utf8')); console.log('保留上一次的結果：', old); process.exit(0); } catch (e) {}
+          }
+          // 只有內容改變時才寫檔（checked 時間每天至少更新一次，讓網頁知道資料還是新的）
+          let old = null; try { old = JSON.parse(readFileSync(OUT, 'utf8')); } catch (e) {}
+          const same = old && old.status === result.status && old.label === result.label;
+          const fresh = old && old.checked && Date.now() - Date.parse(old.checked) < 20 * 3600e3;
+          if (same && fresh) { console.log('時段沒有變化：', result); process.exit(0); }
+          writeFileSync(OUT, JSON.stringify(result, null, 1) + '\n');
+          console.log('已更新：', result);
+
+          EOF
+          node /tmp/bk/booking-status.mjs "$GITHUB_WORKSPACE/booking-status.json"
+
+      - name: 有變化才提交
+        run: |
+          git add -N booking-status.json 2>/dev/null || true
+          if git diff --quiet -- booking-status.json; then echo "沒有變化，不提交"; exit 0; fi
+          git config user.name "writeopia-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add booking-status.json
+          git commit -m "更新預約試課最早時段"
+          git pull --rebase
+          git push
