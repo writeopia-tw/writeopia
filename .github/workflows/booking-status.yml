@@ -72,7 +72,9 @@ jobs:
               }
               const cells = [...document.querySelectorAll('[data-grid-cell]')].length;
               const noneMsg = /沒有可預約的時段|沒有可預約時段/.test(part);
-              return { year: hdr[1] ? +hdr[1] : null, month: hdr[2] ? +hdr[2] : null, days, cells, noneMsg };
+              const tz = (t.match(/GMT([+-])(\d{1,2}):?(\d{2})?/) || []);
+              const offsetMin = tz[1] ? (tz[1] === '-' ? -1 : 1) * (+tz[2] * 60 + +(tz[3] || 0)) : null;
+              return { year: hdr[1] ? +hdr[1] : null, month: hdr[2] ? +hdr[2] : null, days, cells, noneMsg, offsetMin };
             });
           }
 
@@ -105,6 +107,12 @@ jobs:
             if (!v.cells) throw new Error('讀不到預約頁的日曆');
 
             if (slot && slot.time) {
+              // 頁面顯示的時區可能不是台北（GitHub 的主機在國外），換算成台北時間 (GMT+08:00)
+              const off = v.offsetMin == null ? 480 : v.offsetMin;
+              const [hh, mm] = slot.time.split(':').map(Number);
+              const utc = Date.UTC(slot.y, slot.m - 1, slot.d, hh, mm) - off * 60e3;
+              const tw = new Date(utc + 480 * 60e3);
+              slot = { y: tw.getUTCFullYear(), m: tw.getUTCMonth() + 1, d: tw.getUTCDate(), time: String(tw.getUTCHours()).padStart(2, '0') + ':' + String(tw.getUTCMinutes()).padStart(2, '0'), shownOffset: off };
               const dayMs = Date.UTC(slot.y, slot.m - 1, slot.d);
               const diff = Math.round((dayMs - todayTW) / 864e5);
               const wd = WEEK[new Date(dayMs).getUTCDay()];
